@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/PaintingMusic/FileContentIndex
+/.vs/PaintingMusic/v17
+/.vs/slnx.sqlite
+/.vs/VSWorkspaceState.json
+/Core/.vs/Core
