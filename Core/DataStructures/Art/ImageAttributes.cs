@@ -11,7 +11,7 @@
         public double Tone { get; set; }
         public double Area { get; set; }
         public double Complexity { get; set; }
-        public required Tuple<double, double> CanvasLocation { get; set; }
-        public required Tuple<double, double> COG { get; set; }
+        public required (double X, double Y) CanvasLocation { get; set; }
+        public required (double X, double Y) COG { get; set; }
     }
 }
