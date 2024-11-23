@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Models\Markov\Data\MarkovMatrixChords.csv" />
+    <None Remove="Models\Markov\Data\MarkovMatrixNotes.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Models\Markov\Data\MarkovMatrixChords.csv" />
+    <EmbeddedResource Include="Models\Markov\Data\MarkovMatrixNotes.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Core">
+      <HintPath>..\..\..\Core\Core\bin\Debug\net9.0\Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
