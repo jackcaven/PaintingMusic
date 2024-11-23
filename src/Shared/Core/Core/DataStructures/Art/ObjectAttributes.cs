@@ -1,6 +1,6 @@
 ﻿namespace Core.DataStructures.Art
 {
-    public record ImageAttributes
+    public record ObjectAttributes
     {
         public Guid Id { get; set; }
         public double ColorR { get; set; }
