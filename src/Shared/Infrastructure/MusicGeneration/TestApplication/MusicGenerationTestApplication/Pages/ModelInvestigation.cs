@@ -1,4 +1,5 @@
-﻿using Core.DataStructures.Art;
+﻿using ConsoleTools.Helpers;
+using Core.DataStructures.Art;
 using Core.DataStructures.Music;
 using Core.Interfaces;
 using MusicGenerationTestApplication.Utilities;
@@ -8,6 +9,7 @@ namespace MusicGenerationTestApplication.Pages
 {
     internal class ModelInvestigation(ICoreMusicProducer coreMusicProducer)
     {
+        private const string ApplicationTitle = "Painting Music - Music Generation Test";
         private readonly ICoreMusicProducer coreMusicProducer = coreMusicProducer;
         private readonly List<string> actions = ["Add", "Remove", "Clear", "Quit"];
         private readonly JsonSerializerOptions jsonSerializerOptions = new()
@@ -22,7 +24,7 @@ namespace MusicGenerationTestApplication.Pages
 
             while (action != "Quit")
             {
-                Title.Show();
+                Title.Show(ApplicationTitle);
                 action = Menu.Show(actions, "Please select an action: \n");
 
                 if (action == "Add")
@@ -50,7 +52,7 @@ namespace MusicGenerationTestApplication.Pages
 
         public void Add()
         {
-            Title.Show();
+            Title.Show(ApplicationTitle);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Sending mock payload\n");
             Console.ResetColor();
@@ -71,7 +73,7 @@ namespace MusicGenerationTestApplication.Pages
 
         private void Remove()
         {
-            Title.Show();
+            Title.Show(ApplicationTitle);
             Console.ForegroundColor = ConsoleColor.Red;
             if (attributesCache.Count == 0) 
             {
@@ -83,7 +85,7 @@ namespace MusicGenerationTestApplication.Pages
             Guid coreId = Menu.Show(attributesCache.Keys.ToList(), "Please select an id to remove from Core Cache:\n");
             coreMusicProducer.Remove(attributesCache[coreId], MockDataProvider.GetRandomCanvasAttributes());
 
-            Title.Show();
+            Title.Show(ApplicationTitle);
             Console.WriteLine($"Removed {coreId} from cache");
             attributesCache.Remove(coreId);
             Console.ResetColor();
@@ -92,7 +94,7 @@ namespace MusicGenerationTestApplication.Pages
 
         private void Clear()
         {
-            Title.Show();
+            Title.Show(ApplicationTitle);
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Clearing model caches");
             coreMusicProducer.Clear();

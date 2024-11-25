@@ -12,6 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="ConsoleTools">
+      <HintPath>..\..\..\Utilities\ConsoleTools\bin\Debug\net9.0\ConsoleTools.dll</HintPath>
+    </Reference>
     <Reference Include="Core">
       <HintPath>..\..\..\..\Core\Core\bin\Debug\net9.0\Core.dll</HintPath>
     </Reference>

@@ -1,6 +1,12 @@
-﻿namespace MusicGenerationTestApplication.Pages
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleTools.Helpers
 {
-    internal static class Menu
+    public static class Menu
     {
         /// <summary>
         /// Displays a menu and allows the user to select an option using arrow keys.
@@ -19,7 +25,6 @@
             while (true)
             {
                 Console.Clear();
-                Title.Show();
                 Console.WriteLine(prompt);
 
                 // Display the menu
