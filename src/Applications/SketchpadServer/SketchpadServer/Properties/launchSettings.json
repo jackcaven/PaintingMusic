@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SketchpadServer": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
