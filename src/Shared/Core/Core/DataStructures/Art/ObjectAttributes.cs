@@ -2,7 +2,7 @@
 {
     public record ObjectAttributes
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; } = string.Empty;
         public double ColorR { get; set; }
         public double ColorG { get; set; }
         public double ColorB { get; set; }
