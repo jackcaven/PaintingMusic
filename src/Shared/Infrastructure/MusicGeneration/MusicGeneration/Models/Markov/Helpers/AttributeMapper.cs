@@ -11,7 +11,7 @@ namespace MusicGeneration.Models.Markov.Helpers
 
         public static int GetPitch(ref ObjectAttributes imageAttributes)
         {
-            double[] attributesOfInterest = { 1 - imageAttributes.Area, imageAttributes.Temperature, imageAttributes.Complexity };
+            double[] attributesOfInterest = [1 - imageAttributes.Area, imageAttributes.Temperature, imageAttributes.Complexity];
 
             return (int)(attributesOfInterest.Average() * pitchMultiplier);
         }

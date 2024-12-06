@@ -9,7 +9,7 @@ namespace MusicGenerationTestApplication.Utilities
         {
             return new ObjectAttributes()
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.NewGuid().ToString(),
                 ColorR = Random.NextDouble(),
                 ColorB = Random.NextDouble(),
                 ColorG = Random.NextDouble(),

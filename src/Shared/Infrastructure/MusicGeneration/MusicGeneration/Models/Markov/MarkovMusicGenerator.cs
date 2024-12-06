@@ -14,7 +14,7 @@ namespace MusicGeneration.Models.Markov
         private const int defaultBPM = 130;
         private const double closeObjectThreshold = 0.05;
 
-        private IDictionary<Guid, MusicData> musicDataCache = new Dictionary<Guid, MusicData>();
+        private Dictionary<string, MusicData> musicDataCache = [];
         private List<ObjectAttributes> objectAttributesCache = [];
         private CanvasAttributes? canvasAttributesCache;
 
@@ -28,11 +28,11 @@ namespace MusicGeneration.Models.Markov
 
             canvasAttributesCache = canvasAttributes;
 
+            musicData.BPM = defaultBPM;
+
             // Handle Fist Object
             if (objectAttributesCache.Count == 0)
             {
-                musicData.BPM = defaultBPM;
-
                 musicData.Notes.AddRange(GenerateMotif(startTime: 0, ref objectAttributes, ref canvasAttributes));
 
                 musicDataCache[objectAttributes.Id] = musicData;

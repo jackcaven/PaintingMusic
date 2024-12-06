@@ -16,7 +16,7 @@ namespace MusicGenerationTestApplication.Pages
         {
             WriteIndented = true,
         };
-        private Dictionary<Guid, ObjectAttributes> attributesCache = [];
+        private Dictionary<string, ObjectAttributes> attributesCache = [];
 
         internal void Show()
         {
@@ -82,7 +82,7 @@ namespace MusicGenerationTestApplication.Pages
                 return;
             }
 
-            Guid coreId = Menu.Show(attributesCache.Keys.ToList(), "Please select an id to remove from Core Cache:\n");
+            string coreId = Menu.Show(attributesCache.Keys.ToList(), "Please select an id to remove from Core Cache:\n");
             coreMusicProducer.Remove(attributesCache[coreId], MockDataProvider.GetRandomCanvasAttributes());
 
             Title.Show(ApplicationTitle);
