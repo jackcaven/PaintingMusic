@@ -1,6 +1,6 @@
 ﻿namespace SketchpadServer.Enums
 {
-    internal enum Command
+    public enum Command
     {
         Reset,
         Update,
@@ -9,6 +9,7 @@
         Ai,
         Pruning,
         Transport,
-        Kill
+        Kill,
+        Mute
     }
 }

@@ -3,10 +3,10 @@ using SketchpadServer.Models.Payloads;
 
 namespace SketchpadServer.Helpers
 {
-    internal static class CoreDataMapper
+    public static class CoreDataMapper
     {
         private const double normalizingRGB = 255;
-        internal static ObjectAttributes MapToCoreData(ref UpdateShapes updateShapes)
+        public static ObjectAttributes MapToCoreData(ref UpdateShapes updateShapes)
         {
             Shape shape = updateShapes.Payload.Shapes.First();
             (double r, double g, double b ) = HexToRGB(shape.Color);
@@ -27,7 +27,7 @@ namespace SketchpadServer.Helpers
             };
         }
 
-        private static (double r, double g, double b) HexToRGB(string hex)
+        public static (double r, double g, double b) HexToRGB(string hex)
         {
             if (hex.StartsWith('#'))
             {
@@ -46,17 +46,17 @@ namespace SketchpadServer.Helpers
             return (r, g, b);
         }
 
-        private static double Tone(double r, double g, double b)
+        public static double Tone(double r, double g, double b)
         {
             return (0.2126 * r + 0.7152 * g + 0.0722 * b) / normalizingRGB;
         }
 
-        private static double Temperature(double rNormalized, double bNormalized)
+        public static double Temperature(double rNormalized, double bNormalized)
         {
             return rNormalized - bNormalized;
         }
 
-        private static double Hue(double rNormalized, double gNormalized, double bNormalized)
+        public static double Hue(double rNormalized, double gNormalized, double bNormalized)
         {
             double max = Math.Max(rNormalized, Math.Max(gNormalized, bNormalized));
             double min = Math.Min(rNormalized, Math.Min(gNormalized, bNormalized));
@@ -84,7 +84,7 @@ namespace SketchpadServer.Helpers
             return hue;
         }
 
-        private static (double x, double y) Cog(List<(double x, double y)> coords, double area)
+        public static (double x, double y) Cog(List<(double x, double y)> coords, double area)
         {
             if (coords.Count == 1)
             {

@@ -6,13 +6,14 @@ using SketchpadServer.Models.Payloads;
 
 namespace SketchpadServer.Classes
 {
-    internal class CoreAdapter(ICoreMusicProducer coreMusicProducer)
+    public class CoreAdapter(ICoreMusicProducer coreMusicProducer)
     {
         private readonly ICoreMusicProducer _coreMusicProducer = coreMusicProducer;
         private readonly List<ObjectAttributes> _objectAttributesCache = [];
         private CanvasAttributes? _canvasAttributes;
+        private readonly string[] _instruments = ["piano", "violin", "flute", "trumpet"];
         
-        internal MusicData GenerateMusic(UpdateShapes updateShapes)
+        public MusicData GenerateMusic(UpdateShapes updateShapes)
         {
             ObjectAttributes objectAttributes = CoreDataMapper.MapToCoreData(ref updateShapes);
             _objectAttributesCache.Add(objectAttributes);
@@ -34,8 +35,13 @@ namespace SketchpadServer.Classes
             return _coreMusicProducer.Add(objectAttributes, _canvasAttributes);
         }
 
-        internal void DeleteShape(string shapeID) 
+        public void DeleteShape(string shapeID) 
         {
+            if (!_objectAttributesCache.Where(x => x.Id == shapeID).Any())
+            {
+                return;
+            }
+
             var shapeToDelete = _objectAttributesCache.Where(x => x.Id == shapeID).First();
 
            if (shapeToDelete is null && _canvasAttributes is null)
@@ -44,21 +50,44 @@ namespace SketchpadServer.Classes
            }
 
             _objectAttributesCache.Remove(shapeToDelete!);
-            double previousCanvasArea = _canvasAttributes!.AreaCovered;
-            _canvasAttributes = new()
+
+            if (_objectAttributesCache.Count == 0)
             {
-                COG = CalculateGlobalCOG(),
-                AreaCovered = previousCanvasArea - shapeToDelete!.Area
-            };
+                _canvasAttributes = new() { AreaCovered = 0, COG = (0, 0) };
+            }
+            else
+            {
+                double previousCanvasArea = _canvasAttributes!.AreaCovered;
+                _canvasAttributes = new()
+                {
+                    COG = CalculateGlobalCOG(),
+                    AreaCovered = previousCanvasArea - shapeToDelete!.Area
+                };
+            }
 
             _coreMusicProducer.Remove(shapeToDelete!, _canvasAttributes!);
         }
 
-        internal void Clear()
+        public void Clear()
         {
             _canvasAttributes = null;
             _objectAttributesCache.Clear();
             _coreMusicProducer.Clear();
+        }
+
+        public string GetInstrument()
+        {
+            if (_objectAttributesCache.Count == 0)
+            {
+                return "piano";
+            }
+            else
+            {
+                Random rnd = new();
+                return _instruments[rnd.NextInt64(0, _instruments.Length - 1)];
+            }
+
+
         }
 
         private (double X, double Y) CalculateGlobalCOG()
