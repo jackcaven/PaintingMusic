@@ -32,6 +32,8 @@ namespace SketchpadServer.Classes
 
             _logger.LogDebug("Websocket server is listening on {0}", defaultUrl);
 
+            Console.WriteLine("For Sketchpad, navigate to: https://ray.scot/pm/public/");
+
             while (true)
             {
                 try
