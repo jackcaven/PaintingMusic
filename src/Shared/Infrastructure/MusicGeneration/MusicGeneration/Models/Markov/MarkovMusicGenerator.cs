@@ -28,15 +28,15 @@ namespace MusicGeneration.Models.Markov
 
             canvasAttributesCache = canvasAttributes;
 
-            musicData.BPM = defaultBPM;
-
             // Handle Fist Object
             if (objectAttributesCache.Count == 0)
             {
-                musicData.Notes.AddRange(GenerateMotif(startTime: 0, ref objectAttributes, ref canvasAttributes));
+                musicData.Notes.AddRange(GenerateMotif(startTime: 0, ref objectAttributes, ref canvasAttributesCache));
 
                 musicDataCache[objectAttributes.Id] = musicData;
                 objectAttributesCache.Add(objectAttributes);
+
+                musicData.BPM = defaultBPM;
 
                 return musicData;
             }
@@ -49,6 +49,9 @@ namespace MusicGeneration.Models.Markov
                 musicData.Notes.AddRange(GenerateChords(ref objectAttributes, musicDataCache[closestObject.Id]));
                 musicDataCache[objectAttributes.Id] = musicData;
                 objectAttributesCache.Add(objectAttributes);
+
+                musicData.BPM = AttributeMapper.GetBPM(ref canvasAttributesCache, objectAttributesCache.Count);
+
                 return musicData;
             }
 
@@ -58,6 +61,9 @@ namespace MusicGeneration.Models.Markov
             musicData.Notes.AddRange(GenerateMotif(startTime, ref objectAttributes, ref canvasAttributes));
             musicDataCache[objectAttributes.Id] = musicData;
             objectAttributesCache.Add(objectAttributes);
+
+            musicData.BPM = AttributeMapper.GetBPM(ref canvasAttributesCache, objectAttributesCache.Count);
+
             return musicData;
         }
 

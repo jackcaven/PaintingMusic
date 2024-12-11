@@ -6,7 +6,7 @@ namespace MusicGeneration.Models.Markov.Helpers
     internal static class AttributeMapper
     {
         private const int pitchMultiplier = 127;
-        private const double largeShapeMax = 30;
+        private const double largeShapeMax =  1.0;
         private const double maxDistanceFromCentre = 0.5;
 
         public static int GetPitch(ref ObjectAttributes imageAttributes)
@@ -43,7 +43,7 @@ namespace MusicGeneration.Models.Markov.Helpers
         {
             double avg = canvasAttributes.AreaCovered / numberOfObjects;
             double value = Math.Max(0, Math.Min(largeShapeMax, avg));
-            int[] outputs = [140, 130, 120, 110, 100, 90, 80, 70, 60, 50];
+            int[] outputs = [140, 130, 120, 115, 110, 100];
 
             int index = (int)(value * (outputs.Length - largeShapeMax));
 
