@@ -23,7 +23,6 @@ class Program
             {
                 configure.ClearProviders();
                 configure.AddConsole();
-                configure.SetMinimumLevel(LogLevel.Debug);
             });
 
             services.AddSingleton<WebsocketServer>();
