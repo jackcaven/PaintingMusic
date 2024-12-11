@@ -6,7 +6,18 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <PackageIcon>SketchpadServerIcon.jpg</PackageIcon>
+    <Company>Painting Music Limited</Company>
+    <Title>Painting Music: Sketchpad Server</Title>
+    <ApplicationIcon>SketchpadServerIco.ico</ApplicationIcon>
+    <Authors>Painting Music Limited</Authors>
+    <AnalysisLevel>latest</AnalysisLevel>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="SketchpadServerIco.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
