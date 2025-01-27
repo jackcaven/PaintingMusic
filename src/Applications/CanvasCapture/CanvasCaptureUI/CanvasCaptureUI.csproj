@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <StartupObject></StartupObject>
+    <SignAssembly>True</SignAssembly>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog.Sinks.RichTextBox.WinForms.Colored" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CanvasCapture\CanvasCapture.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Core">
+      <HintPath>..\..\..\Shared\Core\Core\bin\Debug\net9.0\Core.dll</HintPath>
+    </Reference>
+    <Reference Include="MusicGeneration">
+      <HintPath>..\..\..\Shared\Infrastructure\MusicGeneration\MusicGeneration\bin\Debug\net9.0\MusicGeneration.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

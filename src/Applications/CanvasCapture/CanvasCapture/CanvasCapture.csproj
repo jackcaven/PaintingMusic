@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="9.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Core">
+      <HintPath>..\..\..\Shared\Core\Core\bin\Debug\net9.0\Core.dll</HintPath>
+    </Reference>
+    <Reference Include="MusicGeneration">
+      <HintPath>..\..\..\Shared\Infrastructure\MusicGeneration\MusicGeneration\bin\Debug\net9.0\MusicGeneration.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
