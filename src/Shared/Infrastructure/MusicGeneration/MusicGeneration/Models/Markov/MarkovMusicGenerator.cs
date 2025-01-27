@@ -154,7 +154,7 @@ namespace MusicGeneration.Models.Markov
                 int extraNotes = numberOfNotes - notesToBuildChord.Count;
                 int extraNotesPerChord = numberOfNotes / notesToBuildChord.Count;
                 int pos = 0;
-                while (pos <= motifToBuildChordFrom.Notes.Count)
+                while (pos < motifToBuildChordFrom.Notes.Count)
                 {
                     Note currentNote = motifToBuildChordFrom.Notes[pos];
                     double noteDuration = currentNote.Duration;

@@ -22,7 +22,7 @@ namespace MusicGeneration.Models.Markov.Model
         {
             List<int> notes = [initialNote];
 
-            for (int i = 1; i < numberOfNotesToGenerate; i++)
+            for (int i = 1; i <= numberOfNotesToGenerate; i++)
             {
                 notes.Add(GetNextState(notes[i - 1]));
             }
