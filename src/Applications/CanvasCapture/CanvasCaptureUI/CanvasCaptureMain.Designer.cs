@@ -36,6 +36,8 @@
             buttonStart = new Button();
             pictureBoxImages = new PictureBox();
             richTextBoxDataViewer = new RichTextBox();
+            comboBoxInstruments = new ComboBox();
+            labelInstrument = new Label();
             panelControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBoxImages).BeginInit();
             SuspendLayout();
@@ -43,6 +45,8 @@
             // panelControls
             // 
             panelControls.BorderStyle = BorderStyle.Fixed3D;
+            panelControls.Controls.Add(labelInstrument);
+            panelControls.Controls.Add(comboBoxInstruments);
             panelControls.Controls.Add(label1);
             panelControls.Controls.Add(checkedListBoxOptions);
             panelControls.Controls.Add(buttonStop);
@@ -68,7 +72,7 @@
             checkedListBoxOptions.FormattingEnabled = true;
             checkedListBoxOptions.Location = new Point(17, 62);
             checkedListBoxOptions.Name = "checkedListBoxOptions";
-            checkedListBoxOptions.Size = new Size(879, 240);
+            checkedListBoxOptions.Size = new Size(879, 160);
             checkedListBoxOptions.TabIndex = 3;
             checkedListBoxOptions.ItemCheck += checkedListBoxOptions_ItemCheck;
             // 
@@ -117,6 +121,23 @@
             richTextBoxDataViewer.TabIndex = 2;
             richTextBoxDataViewer.Text = "";
             // 
+            // comboBoxInstruments
+            // 
+            comboBoxInstruments.FormattingEnabled = true;
+            comboBoxInstruments.Location = new Point(172, 270);
+            comboBoxInstruments.Name = "comboBoxInstruments";
+            comboBoxInstruments.Size = new Size(724, 40);
+            comboBoxInstruments.TabIndex = 5;
+            // 
+            // labelInstrument
+            // 
+            labelInstrument.AutoSize = true;
+            labelInstrument.Location = new Point(17, 273);
+            labelInstrument.Name = "labelInstrument";
+            labelInstrument.Size = new Size(130, 32);
+            labelInstrument.TabIndex = 6;
+            labelInstrument.Text = "Instrument";
+            // 
             // CanvasCaptureMain
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
@@ -145,5 +166,7 @@
         private RichTextBox richTextBoxDataViewer;
         private CheckedListBox checkedListBoxOptions;
         private Label label1;
+        private Label labelInstrument;
+        private ComboBox comboBoxInstruments;
     }
 }

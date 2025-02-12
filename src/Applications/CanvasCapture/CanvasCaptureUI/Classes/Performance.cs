@@ -8,12 +8,14 @@ using MusicGeneration;
 using Serilog;
 namespace CanvasCaptureUI.Classes
 {
-    internal class Performance(PictureBox displayBox) : ICanvasCaptureProcess
+    internal class Performance(PictureBox displayBox, ComboBox InstrumentSelection) : ICanvasCaptureProcess
     {
         private readonly string imageDirectory = AppSettingsManager.GetImageDirectory();
         private readonly ICoreMusicProducer coreMusicProducer = CoreMusicGeneratorFactory.ConstructMusicGenerator(Model.Markov);
         private readonly ImageCropper cropper = new(displayBox);
+        private readonly MusicPlayerClient playerClient = new();
         private readonly List<ObjectAttributes> objectAttributesCache = [];
+        
         private CanvasAttributes? canvasAttributesCache;
         private FileSystemWatcher? fileSystemWatcher;
         private Image? imageCache;
@@ -22,7 +24,7 @@ namespace CanvasCaptureUI.Classes
 
         public bool IsRunning => isRunning;
 
-        Task ICanvasCaptureProcess.Start()
+        async Task ICanvasCaptureProcess.Start()
         {
             Log.Information("Starting performance");
             Log.Debug($"File watcher watching: {imageDirectory}");
@@ -34,66 +36,61 @@ namespace CanvasCaptureUI.Classes
                 Filter = "*.*"
             };
 
-            fileSystemWatcher.Created += OnImageReceived;
+            fileSystemWatcher.Created += async (s, e) => await OnImageReceived(e.FullPath);
             fileSystemWatcher.EnableRaisingEvents = true;
 
+            await playerClient.Start();
             isRunning = true;
-
-            return Task.CompletedTask;
         }
 
-        Task ICanvasCaptureProcess.Stop()
+        async Task ICanvasCaptureProcess.Stop()
         {
-            Log.Warning("Terminating perfromance session");
-            fileSystemWatcher!.EnableRaisingEvents = false;
-            fileSystemWatcher?.Dispose();
+            Log.Warning("Stopping performance session...");
+
+            if (fileSystemWatcher != null)
+            {
+                fileSystemWatcher.EnableRaisingEvents = false;
+                fileSystemWatcher.Dispose();
+                fileSystemWatcher = null;
+            }
+
             isRunning = false;
             canvasCache = null;
             imageCache = null;
+            objectAttributesCache.Clear();
+
             coreMusicProducer.Clear();
+            await playerClient.Stop();
             MessageBox.Show("Performance has now ended", "Performance Terminated", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return Task.CompletedTask;
         }
 
-        private async void OnImageReceived(object sender, FileSystemEventArgs e)
+        private async Task OnImageReceived(string filePath)
         {
             try
             {
-                while (!IsFileReady(e.FullPath))
+                while (!IsFileReady(filePath))
                 {
                     await Task.Delay(500);
                 }
 
-                Image image = new Bitmap(e.FullPath);
+                using var image = new Bitmap(filePath);
 
-                image = new Bitmap(image, new((int)image.Width / 2, (int)image.Height / 2));
+                var resizedImage = new Bitmap(image, new((int)image.Width / 2, (int)image.Height / 2));
 
                 // Initial Canvas Crop
                 if (canvasCache is null)
                 {
-                    displayBox.Image = image;
+                    displayBox.Image = resizedImage;
                     canvasCache = await cropper.GetCanvasArea();
                     displayBox.Image = null;
                     return;
                 }
 
-                // Initialize image for analysis
-                Image postProcessingImage;
-
                 // Crop to canvas
-                Image croppedImage = image.CropToCanvas((Rectangle)canvasCache);
+                Image croppedImage = resizedImage.CropToCanvas(canvasCache.Value);
                 
-                // Handle first non-canvas image
-                if (imageCache is null)
-                {
-                    postProcessingImage = croppedImage;
-                }
-                else
-                {
-                    postProcessingImage = croppedImage.SubtractImages(imageCache);
-                }
-
-                // Update image cache
+                // Process image difference
+                var postProcessingImage = imageCache == null ? croppedImage : croppedImage.SubtractImages(imageCache);
                 imageCache = croppedImage;
 
                 // Crop image to painted object
@@ -101,18 +98,27 @@ namespace CanvasCaptureUI.Classes
 
                 // Get data from image and send to PM
                 ObjectAttributes objectAttributes = objectImage.GetObjectAttributes(imageCache);
+                Log.Debug("Object Attribute Data: {ObjectData}", objectAttributes);
                 objectAttributesCache.Add(objectAttributes);
 
                 canvasAttributesCache = new()
                 {
-                    AreaCovered = objectAttributesCache.Sum(x => x.Area) >= 1 ? 1 : objectAttributesCache.Sum(x => x.Area),
-                    COG = (objectAttributesCache.Select(o => o.COG.X).Average(), objectAttributesCache.Select(o => o.COG.Y).Average())
+                    AreaCovered = Math.Min(1, objectAttributesCache.Sum(o => o.Area)),
+                    COG = (
+                        objectAttributesCache.Average(o => o.COG.X),
+                        objectAttributesCache.Average(o => o.COG.Y)
+                    )
                 };
 
+                Log.Debug("Canvas Attributes: {CanvasData}", canvasAttributesCache);
 
                 MusicData musicData = coreMusicProducer.Add(objectAttributes, canvasAttributesCache);
 
-                Log.Information("Sending payload to music player...");
+                musicData.Instrument = InstrumentSelection.SelectedText;
+
+                Log.Debug("Music Data: {Music Data}", musicData);
+
+                await playerClient.SendPayload(musicData);
 
             }
             catch (Exception ex)

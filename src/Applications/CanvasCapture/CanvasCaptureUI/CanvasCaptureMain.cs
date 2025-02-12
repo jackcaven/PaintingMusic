@@ -17,14 +17,20 @@ namespace CanvasCapture
             { "Enable logging of image data", true },
             { "Run as a simulation", false },
         };
+        private readonly List<string> instruments = [
+            "Piano",
+            "Violin",
+            "Choir",
+            "Synth"
+        ];
 
         public CanvasCaptureMain()
         {
             InitializeComponent();
             options = defaultOptions;
-            canvasCaptureProcess = new Performance(pictureBoxImages);
             ConfigureSettings();
             ConfigureLogger();
+            canvasCaptureProcess = new Performance(pictureBoxImages, comboBoxInstruments);
         }
 
         #region Button Controls
@@ -41,6 +47,8 @@ namespace CanvasCapture
                 canvasCaptureProcess = new ImageProcessingSimulator(pictureBoxImages);
             }
 
+            comboBoxInstruments.Enabled = false;
+
             await canvasCaptureProcess.Start();
         }
         private async void buttonStop_Click(object sender, EventArgs e)
@@ -49,6 +57,8 @@ namespace CanvasCapture
             {
                 await canvasCaptureProcess.Stop();
             }
+
+            comboBoxInstruments.Enabled = true;
         }
         #endregion
 
@@ -63,6 +73,15 @@ namespace CanvasCapture
                 checkedListBoxOptions.Items.Add(option.value.Key);
                 checkedListBoxOptions.SetItemChecked(option.i, option.value.Value);
             }
+
+            comboBoxInstruments.Items.Clear();
+
+            foreach(var instrument in instruments)
+            {
+                comboBoxInstruments.Items.Add(instrument);
+            }
+
+            comboBoxInstruments.SelectedIndex = 0;
         }
 
         private void checkedListBoxOptions_ItemCheck(object sender, ItemCheckEventArgs e)
@@ -89,10 +108,10 @@ namespace CanvasCapture
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.RichTextBox(
                     richTextBoxControl: richTextBoxDataViewer,
-                    minimumLogEventLevel: Serilog.Events.LogEventLevel.Verbose,
                     outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception},",
                     autoScroll: true
                 )
+                .MinimumLevel.Debug()
                 .CreateLogger();
         }
         #endregion
