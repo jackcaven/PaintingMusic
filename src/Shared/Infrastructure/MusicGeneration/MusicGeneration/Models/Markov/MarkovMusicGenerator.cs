@@ -142,7 +142,7 @@ namespace MusicGeneration.Models.Markov
                         Notes = chordPitches,
                         Velocity = velocity,
                         StartTime = noteToBuildChordFrom.StartTime,
-                        Duration = noteToBuildChordFrom.Duration * pos
+                        Duration = noteToBuildChordFrom.Duration * chordStep
                     });
 
                     pos += chordStep;
