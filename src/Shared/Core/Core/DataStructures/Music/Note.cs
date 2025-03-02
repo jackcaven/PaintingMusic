@@ -6,5 +6,12 @@
         public int Velocity { get; set; }
         public double StartTime { get; set; }
         public double Duration { get; set; }
+
+        public override string ToString()
+        {
+            var notesString = string.Join(", ", Notes);
+
+            return $"Notes: [{notesString}], Velocity: {Velocity}, StartTime: {StartTime}, Duration: {Duration}";
+        }
     }
 }
