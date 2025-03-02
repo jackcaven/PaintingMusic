@@ -1,4 +1,3 @@
-using CanvasCapture.Classes;
 using CanvasCapture.Interfaces;
 using CanvasCaptureUI.Classes;
 using CanvasCaptureUI.Simulation;
@@ -9,7 +8,6 @@ namespace CanvasCapture
     public partial class CanvasCaptureMain : Form
     {
         private ICanvasCaptureProcess canvasCaptureProcess;
-        private readonly string imageDirectory = AppSettingsManager.GetImageDirectory();
         private readonly Dictionary<string, bool> options;
         private readonly Dictionary<string, bool> defaultOptions = new()
         {
@@ -30,7 +28,7 @@ namespace CanvasCapture
             options = defaultOptions;
             ConfigureSettings();
             ConfigureLogger();
-            canvasCaptureProcess = new Performance(pictureBoxImages, comboBoxInstruments);
+            canvasCaptureProcess = new Performance(pictureBoxImages);
         }
 
         #region Button Controls
@@ -76,7 +74,7 @@ namespace CanvasCapture
 
             comboBoxInstruments.Items.Clear();
 
-            foreach(var instrument in instruments)
+            foreach (var instrument in instruments)
             {
                 comboBoxInstruments.Items.Add(instrument);
             }
@@ -100,6 +98,15 @@ namespace CanvasCapture
         {
             return checkedListBoxOptions.CheckedItems.Contains(defaultOptions.Keys.Last());
         }
+
+        private void comboBoxInstruments_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (canvasCaptureProcess is not null)
+            {
+                canvasCaptureProcess.Instruments = [comboBoxInstruments.SelectedText];
+            }
+        }
+
         #endregion
 
         #region Configuration
@@ -111,9 +118,10 @@ namespace CanvasCapture
                     outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception},",
                     autoScroll: true
                 )
-                .MinimumLevel.Debug()
+                .MinimumLevel.Verbose()
                 .CreateLogger();
         }
         #endregion
+
     }
 }

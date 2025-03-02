@@ -8,9 +8,9 @@ using MusicGeneration;
 using Serilog;
 namespace CanvasCaptureUI.Classes
 {
-    internal class Performance(PictureBox displayBox, ComboBox InstrumentSelection) : ICanvasCaptureProcess
+    internal class Performance(PictureBox displayBox) : ICanvasCaptureProcess
     {
-        private readonly string imageDirectory = AppSettingsManager.GetImageDirectory();
+        private readonly string imageDirectory = AppSettingsManager.GetImageDirectory("Performance");
         private readonly ICoreMusicProducer coreMusicProducer = CoreMusicGeneratorFactory.ConstructMusicGenerator(Model.Markov);
         private readonly ImageCropper cropper = new(displayBox);
         private readonly MusicPlayerClient playerClient = new();
@@ -23,6 +23,8 @@ namespace CanvasCaptureUI.Classes
         private bool isRunning = false;
 
         public bool IsRunning => isRunning;
+
+        public string[] Instruments { get; set; } = ["piano"];
 
         async Task ICanvasCaptureProcess.Start()
         {
@@ -73,31 +75,39 @@ namespace CanvasCaptureUI.Classes
                     await Task.Delay(500);
                 }
 
-                using var image = new Bitmap(filePath);
+                var image = new Bitmap(filePath);
+                Log.Debug("Original Image size: {0} x {1}", image.Width, image.Height);
 
-                var resizedImage = new Bitmap(image, new((int)image.Width / 2, (int)image.Height / 2));
+                ImagePreparationHelpers.ReduceImageSize(ref image);
+                Log.Debug("Reduced Image size: {0} x {1}", image.Width, image.Height);
 
                 // Initial Canvas Crop
                 if (canvasCache is null)
                 {
-                    displayBox.Image = resizedImage;
+                    displayBox.Image = image;
                     canvasCache = await cropper.GetCanvasArea();
-                    displayBox.Image = null;
+                    Log.Information("Canvas Area: {0} x {1}", canvasCache?.Width, canvasCache?.Height);
+                    cropper.Dispose();
+                    ImagePreparationHelpers.CropToCanvas(ref image, canvasCache!.Value);
+                    imageCache = image;
                     return;
                 }
 
                 // Crop to canvas
-                Image croppedImage = resizedImage.CropToCanvas(canvasCache.Value);
-                
+                ImagePreparationHelpers.CropToCanvas(ref image, canvasCache.Value);
+                Log.Debug("Canvas Cropped Image size: {0} x {1}", image.Width, image.Height);
+
                 // Process image difference
-                var postProcessingImage = imageCache == null ? croppedImage : croppedImage.SubtractImages(imageCache);
-                imageCache = croppedImage;
+                Bitmap postProcessingImage = imageCache == null ? (Bitmap)image : (Bitmap)image.SubtractImages(imageCache);
+                imageCache = image;
+                Log.Debug("Image subtraction successful");
 
                 // Crop image to painted object
-                Image objectImage = postProcessingImage.CropToObject();
+                ImagePreparationHelpers.CropToObject(ref postProcessingImage);
+                Log.Debug("Object Image size: {0} x {1}", postProcessingImage.Width, postProcessingImage.Height);
 
                 // Get data from image and send to PM
-                ObjectAttributes objectAttributes = objectImage.GetObjectAttributes(imageCache);
+                ObjectAttributes objectAttributes = ImageDataMinerExtensions.GetObjectAttributes(ref postProcessingImage, imageCache, Log.Logger);
                 Log.Debug("Object Attribute Data: {ObjectData}", objectAttributes);
                 objectAttributesCache.Add(objectAttributes);
 
@@ -114,9 +124,11 @@ namespace CanvasCaptureUI.Classes
 
                 MusicData musicData = coreMusicProducer.Add(objectAttributes, canvasAttributesCache);
 
-                musicData.Instrument = InstrumentSelection.SelectedText;
+                musicData.Instrument = Instruments[0];
 
-                Log.Debug("Music Data: {Music Data}", musicData);
+                displayBox.Image = postProcessingImage;
+
+                Log.Debug($"Music Data: {musicData}");
 
                 await playerClient.SendPayload(musicData);
 
@@ -124,6 +136,7 @@ namespace CanvasCaptureUI.Classes
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK);
+                Log.Error(ex, "Message: {0}\n Stack Trace: {1}", ex.Message, ex.StackTrace);
             }
         }
 
@@ -139,5 +152,6 @@ namespace CanvasCaptureUI.Classes
                 return false;
             }
         }
+
     }
 }

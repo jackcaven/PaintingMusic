@@ -1,6 +1,6 @@
 ﻿namespace CanvasCaptureUI.Classes
 {
-    internal class ImageCropper(PictureBox pictureBox)
+    internal class ImageCropper(PictureBox pictureBox) : IDisposable
     {
         private readonly PictureBox DisplayBox = pictureBox;
         private int XDown;
@@ -27,7 +27,6 @@
             DisplayBox.MouseDown -= DisplayBox_MouseDown;
             DisplayBox.MouseUp -= DisplayBox_MouseUp;
             DisplayBox.MouseClick -= DisplayBox_Click;
-            DisplayBox.Dispose();
 
             return AreaToCrop;
         }
@@ -69,6 +68,13 @@
             }
             
             AreaToCrop = rec;
+        }
+
+        public void Dispose()
+        {
+            DisplayBox.MouseDown -= DisplayBox_MouseDown;
+            DisplayBox.MouseUp -= DisplayBox_MouseUp;
+            DisplayBox.MouseClick -= DisplayBox_Click;
         }
     }
 }

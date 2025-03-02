@@ -1,5 +1,6 @@
 ﻿using Core.DataStructures.Art;
 using Core.Utilities.Colors;
+using Serilog;
 using System.Drawing;
 
 namespace CanvasCapture.Classes
@@ -9,9 +10,8 @@ namespace CanvasCapture.Classes
         private const int maxColorChannel = 255;
         private const int maxBigObjectPointCount = 55000;
 
-        public static ObjectAttributes GetObjectAttributes(this Image objectImage, Image canvasImage)
+        public static ObjectAttributes GetObjectAttributes(ref Bitmap bitmap, Image canvasImage, ILogger logger)
         {
-            using Bitmap bitmap = new(objectImage);
             List<Point> points = [];
             int perimeterCount = 0;
             List<Color> colors = [];
@@ -19,9 +19,9 @@ namespace CanvasCapture.Classes
             List<double> temperatures = [];
             List<double> tones = [];
 
-            for (int x = 0; x < objectImage.Width; x++)
+            for (int x = 0; x < bitmap.Width; x++)
             {
-                for (int y = 0; y < objectImage.Height; y++)
+                for (int y = 0; y < bitmap.Height; y++)
                 {
                     Color pixel = bitmap.GetPixel(x, y);
 
@@ -37,7 +37,8 @@ namespace CanvasCapture.Classes
                 }
             }
 
-            
+            logger.Information("Color Pixels: {0}, out of {1}", points.Count, bitmap.Width * bitmap.Height);
+
             if (points.Count < maxBigObjectPointCount)
             {
                 foreach (Point point in points)
@@ -53,6 +54,8 @@ namespace CanvasCapture.Classes
                 perimeterCount = -1;
             }
 
+            logger.Debug("Perimeter Count: {0}", perimeterCount);
+
             ObjectAttributes objectAttributes = new()
             {
                 Id = Guid.NewGuid().ToString(),
@@ -64,7 +67,7 @@ namespace CanvasCapture.Classes
                 Tone = tones.Average(),
                 Area = points.Count / (double)(canvasImage.Height * canvasImage.Width),
                 Complexity = perimeterCount == -1 ? 0.01 : (double)perimeterCount / (double)points.Count,
-                COG = (points.Select(p => p.X).Average() / objectImage.Width, points.Select(p => p.Y).Average() / objectImage.Height),
+                COG = (points.Select(p => p.X).Average() / bitmap.Width, points.Select(p => p.Y).Average() / bitmap.Height),
                 CanvasLocation = GetCanvasLocation(canvasImage),
             };
 
