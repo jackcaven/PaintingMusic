@@ -91,8 +91,10 @@
         {
             if (e.Button != MouseButtons.Left) return;
 
-            XUp = e.X;
-            YUp = e.Y;
+            XDown = Math.Clamp(XDown, 0, DisplayBox.Image!.Width);
+            YDown = Math.Clamp(YDown, 0, DisplayBox.Image.Height);
+            XUp = Math.Clamp(e.X, 0, DisplayBox.Image.Width);
+            YUp = Math.Clamp(e.Y, 0, DisplayBox.Image.Height);
 
             AreaToCrop = new(XDown, YDown, Math.Abs(XUp - XDown), Math.Abs(YUp - YDown));
 
