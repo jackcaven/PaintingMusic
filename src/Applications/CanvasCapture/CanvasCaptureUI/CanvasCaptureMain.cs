@@ -101,9 +101,9 @@ namespace CanvasCapture
 
         private void comboBoxInstruments_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (canvasCaptureProcess is not null)
+            if (canvasCaptureProcess is not null && comboBoxInstruments.SelectedItem is not null)
             {
-                canvasCaptureProcess.Instruments = [comboBoxInstruments.SelectedText];
+                canvasCaptureProcess.Instruments = [comboBoxInstruments.SelectedItem?.ToString()];
             }
         }
 
