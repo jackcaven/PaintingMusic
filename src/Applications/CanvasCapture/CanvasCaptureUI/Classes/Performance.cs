@@ -63,6 +63,9 @@ namespace CanvasCaptureUI.Classes
 
             coreMusicProducer.Clear();
             await playerClient.Stop();
+            fileSystemWatcher?.Dispose();
+            displayBox?.Image?.Dispose();
+            ImageOrganiser.OrganiseDirectory(imageDirectory);
             MessageBox.Show("Performance has now ended", "Performance Terminated", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
