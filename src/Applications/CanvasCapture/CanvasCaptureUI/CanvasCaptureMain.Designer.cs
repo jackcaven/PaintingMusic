@@ -152,6 +152,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "CanvasCaptureMain";
             Text = "Painting Music - Canvas Capture";
+            WindowState = FormWindowState.Maximized;
             panelControls.ResumeLayout(false);
             panelControls.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBoxImages).EndInit();
