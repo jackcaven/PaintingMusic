@@ -94,11 +94,11 @@ namespace CanvasCaptureUI.Simulation
                     DisplayBox.Image = diffImage;
                     await Task.Delay(200);
                     DisplayBox.Image = null;
-                    ImagePreparationHelpers.CropToObject(ref diffImage);
+                    ImagePreparationHelpers.CropToObject(ref diffImage, out Point objectCanvasLocation);
                     DisplayBox.Image = diffImage;
                     Log.Debug("Object Size: {0} x {1}", diffImage.Width, diffImage.Height);
                     await Task.Delay(200);
-                    ObjectAttributes data = ImageDataMinerExtensions.GetObjectAttributes(ref diffImage, image, Log.Logger);
+                    ObjectAttributes data = ImageDataMinerExtensions.GetObjectAttributes(ref diffImage, image, objectCanvasLocation, Log.Logger);
                     Log.Information($"{data}{Environment.NewLine}{Environment.NewLine}");
 
                     ObjectAttributesCache.Add(data);

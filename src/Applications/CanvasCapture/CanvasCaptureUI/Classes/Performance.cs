@@ -106,11 +106,11 @@ namespace CanvasCaptureUI.Classes
                 Log.Debug("Image subtraction successful");
 
                 // Crop image to painted object
-                ImagePreparationHelpers.CropToObject(ref postProcessingImage);
+                ImagePreparationHelpers.CropToObject(ref postProcessingImage, out Point objectCanvasLocation);
                 Log.Debug("Object Image size: {0} x {1}", postProcessingImage.Width, postProcessingImage.Height);
 
                 // Get data from image and send to PM
-                ObjectAttributes objectAttributes = ImageDataMinerExtensions.GetObjectAttributes(ref postProcessingImage, imageCache, Log.Logger);
+                ObjectAttributes objectAttributes = ImageDataMinerExtensions.GetObjectAttributes(ref postProcessingImage, imageCache, objectCanvasLocation, Log.Logger);
                 Log.Debug("Object Attribute Data: {ObjectData}", objectAttributes);
                 objectAttributesCache.Add(objectAttributes);
 

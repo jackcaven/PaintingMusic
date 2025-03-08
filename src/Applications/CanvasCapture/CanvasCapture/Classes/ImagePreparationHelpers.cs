@@ -160,7 +160,7 @@ namespace CanvasCapture.Classes
             return image.Clone(finalBoundingBox, image.PixelFormat);
         }
 
-        public static unsafe void CropToObject(ref Bitmap image, int threshold = 500)
+        public static unsafe void CropToObject(ref Bitmap image, out Point objectCanvasLocation, int threshold = 500)
         {
             ArgumentNullException.ThrowIfNull(image);
 
@@ -209,6 +209,8 @@ namespace CanvasCapture.Classes
             // Unlock the image data
             image.UnlockBits(data);
 
+            objectCanvasLocation = new();
+
             // If no significant region is found, keep the original image
             if (regions.Count == 0) return;
 
@@ -219,6 +221,11 @@ namespace CanvasCapture.Classes
             Bitmap cropped = image.Clone(finalBoundingBox, image.PixelFormat);
             image.Dispose();
             image = cropped;
+
+            objectCanvasLocation = new(
+                finalBoundingBox.X + finalBoundingBox.Width,
+                finalBoundingBox.Y + finalBoundingBox.Height
+                );
         }
 
         /// <summary>

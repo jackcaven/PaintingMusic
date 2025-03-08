@@ -10,7 +10,7 @@ namespace CanvasCapture.Classes
         private const int maxColorChannel = 255;
         private const int maxBigObjectPointCount = 55000;
 
-        public static ObjectAttributes GetObjectAttributes(ref Bitmap bitmap, Image canvasImage, ILogger logger)
+        public static ObjectAttributes GetObjectAttributes(ref Bitmap bitmap, Image canvasImage, Point objectCanvasLocation, ILogger logger)
         {
             List<Point> points = [];
             int perimeterCount = 0;
@@ -68,7 +68,7 @@ namespace CanvasCapture.Classes
                 Area = points.Count / (double)(canvasImage.Height * canvasImage.Width),
                 Complexity = perimeterCount == -1 ? 0.01 : (double)perimeterCount / (double)points.Count,
                 COG = (points.Select(p => p.X).Average() / bitmap.Width, points.Select(p => p.Y).Average() / bitmap.Height),
-                CanvasLocation = GetCanvasLocation(canvasImage),
+                CanvasLocation = ((double)objectCanvasLocation.X / canvasImage.Width, (double)objectCanvasLocation.Y / canvasImage.Height),
             };
 
             return objectAttributes;
@@ -97,26 +97,5 @@ namespace CanvasCapture.Classes
             return false;
         }
 
-        private static (double X, double Y) GetCanvasLocation(Image image)
-        {
-            using Bitmap bitmap = new(image);
-            List<Point> points = [];
-
-
-            for (int x = 0; x < image.Width; x++)
-            {
-                for (int y = 0; y < image.Height; y++)
-                {
-                    Color pixel = bitmap.GetPixel(x, y);
-
-                    if (!IsWhite(pixel))
-                    {
-                        points.Add(new(x, y));
-                    }
-                }
-            }
-
-            return (points.Select(p => p.X).Average() / bitmap.Width, points.Select(p => p.Y).Average() / bitmap.Height);
-        }
     }
 }
