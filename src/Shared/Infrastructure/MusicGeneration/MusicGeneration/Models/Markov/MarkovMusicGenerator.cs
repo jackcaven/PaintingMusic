@@ -12,7 +12,7 @@ namespace MusicGeneration.Models.Markov
         private const string noteMarkovNamespace = "MusicGeneration.Models.Markov.Data.MarkovMatrixNotes.csv";
         private const string chordMarkovNamespace = "MusicGeneration.Models.Markov.Data.MarkovMatrixChords.csv";
         private const int defaultBPM = 130;
-        private const double closeObjectThreshold = 0.05;
+        private const double closeObjectThreshold = 0.1;
 
         private Dictionary<string, MusicData> musicDataCache = [];
         private List<ObjectAttributes> objectAttributesCache = [];
