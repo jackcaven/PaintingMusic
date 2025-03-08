@@ -8,12 +8,18 @@ namespace MusicGeneration.Models.Markov.Helpers
         private const int pitchMultiplier = 127;
         private const double largeShapeMax =  1.0;
         private const double maxDistanceFromCentre = 0.5;
+        private const int minAcceptablePitch = 20;
 
         public static int GetPitch(ref ObjectAttributes imageAttributes)
         {
             double[] attributesOfInterest = [1 - imageAttributes.Area, imageAttributes.Temperature, imageAttributes.Complexity];
 
-            return (int)(attributesOfInterest.Average() * pitchMultiplier);
+            int pitch = (int)(attributesOfInterest.Average() * pitchMultiplier);
+
+            if (pitch < minAcceptablePitch)
+                pitch += 20;
+
+            return pitch;
         }
 
         public static int GetVelocity(ref ObjectAttributes imageAttributes)
