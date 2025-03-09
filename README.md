@@ -95,10 +95,14 @@ chore(sketchpad): alter package description
 Key thing to takeaway from the above examples is:
 
 1. The key word at the start:
-    1. feat -> This is when you are adding a new feature (or contributing towards a feature)
-    2. refactor -> This is when you have changes the way code is written to improve scalability / readability etc
-    3. fix -> When you have fixed a bug
-    4. docs -> When you have added to the docs
-    5. chore -> This is for work that has been added outwith the above categories
+
+   | Type      | Description                                                                 |
+   |-----------|-----------------------------------------------------------------------------|
+   | feat      | This is when you are adding a new feature (or contributing towards a feature)|
+   | refactor  | This is when you have changed the way code is written to improve scalability/readability etc |
+   | fix       | When you have fixed a bug                                                   |
+   | docs      | When you have added to the docs                                              |
+   | chore     | This is for work that has been added outside the above categories            |
+  
 2. Name of the model.  This is essentially the model you are working e.g. Markov/Markov2/Mercury
 3. Using imperative language and keeping commit messages short and consise (use words like add, change, alter, etc)
