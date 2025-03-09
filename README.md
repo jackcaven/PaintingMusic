@@ -6,12 +6,36 @@
 
 Painting Music is a project that looks to use explainable AI that converts the process of painting a picture into music.
 
-## Current Applications
+## Repository Structure
+
+We try to follow clean architecture as best to our ability.  Within the C# components in this repo, there is a clear architectural design to help reduce code duplication and increase extensibility.
+
+### Key Layers
+
+#### Core
+
+[Core](/src/Shared/Core/) is, as the name states, the core of all our functionality.  This is where our key interfaces, and datastructures exist.  At this level there should be no external dependencies, as all our solutions should depend on it.
+
+#### Infrastructure
+
+[Infrastructure](/src/Shared/Infrastructure/) is the where we keep the tools that can be built using Core.  This layer is then used by our applications to carry out what they need.  This layer will depend on the Core layer of our architecture. Currently we have two solutions in this layer:
+
+- [Music Generation](/src/Shared/Infrastructure/MusicGeneration/)
+  - This is where all the music generation occurs (e.g. Markov Music Generation)
+- [Utitlities](/src/Shared/Infrastructure/Utilities/)
+  - This is where all generic tools that can be useful in multiple applications are kept.
+
+#### Applications
 
 Using Painting Music technology, two different applications have been developed:
 
-- Canvas Capture
-- Sketchpad
+- [Canvas Capture](/src/Applications/CanvasCapture/)
+- [Sketchpad](/src/Applications/SketchpadServer/)
+
+Another application in this repository that is required to be used alongside Canvas Capture is:
+
+- [Music Player](/src/Applications/MusicPlayer/)
+  - Music Player does not depend on any of the infrastructure or core layers, as it is written in Python.
 
 These applications and their respective documentation can be found in the application directory.
 
