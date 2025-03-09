@@ -123,7 +123,7 @@
             // 
             pictureBoxImages.Location = new Point(945, 12);
             pictureBoxImages.Name = "pictureBoxImages";
-            pictureBoxImages.Size = new Size(1563, 1268);
+            pictureBoxImages.Size = new Size(1920, 1268);
             pictureBoxImages.TabIndex = 1;
             pictureBoxImages.TabStop = false;
             // 
@@ -144,7 +144,7 @@
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Black;
-            ClientSize = new Size(2520, 1300);
+            ClientSize = new Size(2879, 1300);
             Controls.Add(richTextBoxDataViewer);
             Controls.Add(pictureBoxImages);
             Controls.Add(panelControls);
