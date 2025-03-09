@@ -37,6 +37,23 @@ python -m pip install -r /path/to/requirements.txt
 
 Once you have successfully installed dependencies, you should be ready to work and run Music Player.
 
+## Development
+
+## Recommended IDE
+
+When developing Music Player, it is recommended to use Visual Studio Code.
+
+## Recommended Visual Studio Code Extensions
+
+- Python
+- Python Indent
+- Prettier
+- Markdownlint
+- GitLens
+- Error Lens
+- Auto Docstring
+- Black Formatter
+
 ## Adding Dependencies
 
 If you need to update the dependencies or add dependencies for the application, please remember to update the [requirements.txt](./requirements.txt) file.
