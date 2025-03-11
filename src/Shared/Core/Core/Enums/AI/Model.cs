@@ -3,5 +3,6 @@
     public enum Model
     {
         Markov,
+        Som,
     }
 }
