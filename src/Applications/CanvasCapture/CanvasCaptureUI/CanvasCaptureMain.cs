@@ -7,13 +7,15 @@ namespace CanvasCapture
 {
     public partial class CanvasCaptureMain : Form
     {
+        private const string autoAppShutDownKey = "Shut down on performance end";
+        private const string runAsSimKey = "Run as a simulation";
+
         private ICanvasCaptureProcess canvasCaptureProcess;
         private readonly Dictionary<string, bool> options;
         private readonly Dictionary<string, bool> defaultOptions = new()
         {
-            { "Enable image viewer", true },
-            { "Enable logging of image data", true },
-            { "Run as a simulation", false },
+            { autoAppShutDownKey, true },
+            { runAsSimKey, false },
         };
         private readonly List<string> instruments = [
             "Piano",
@@ -40,7 +42,7 @@ namespace CanvasCapture
                 return;
             }
 
-            if (IsRunSimulationSelected())
+            if (IsDevOptionSelected(runAsSimKey))
             {
                 canvasCaptureProcess = new ImageProcessingSimulator(pictureBoxImages);
             }
@@ -57,6 +59,9 @@ namespace CanvasCapture
             }
 
             comboBoxInstruments.Enabled = true;
+
+            if (IsDevOptionSelected(autoAppShutDownKey))
+                Application.Exit();
         }
         #endregion
 
@@ -94,9 +99,9 @@ namespace CanvasCapture
             }
         }
 
-        private bool IsRunSimulationSelected()
+        private bool IsDevOptionSelected(string key)
         {
-            return checkedListBoxOptions.CheckedItems.Contains(defaultOptions.Keys.Last());
+            return checkedListBoxOptions.CheckedItems.Contains(key);
         }
 
         private void comboBoxInstruments_SelectedIndexChanged(object sender, EventArgs e)
