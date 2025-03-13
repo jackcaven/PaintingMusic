@@ -4,6 +4,7 @@ using Core.DataStructures.Music;
 using Core.Interfaces;
 using MusicGeneration.Models.Markov.Helpers;
 using Core.Utilities.DataStructures;
+using Core.BaseClasses;
 
 namespace MusicGeneration.Models.Markov
 {
@@ -20,7 +21,11 @@ namespace MusicGeneration.Models.Markov
 
         private readonly MarkovModel noteModel = new(noteMarkovNamespace);
         private readonly MarkovModel chordModel = new(chordMarkovNamespace);
-        
+
+        public void Configure(MusicGeneratorConfiguration configuration)
+        {
+            throw new NotImplementedException();
+        }
 
         public MusicData Add(ObjectAttributes objectAttributes, CanvasAttributes canvasAttributes)
         {
