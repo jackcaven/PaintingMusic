@@ -50,6 +50,7 @@ class MusicPlayer:
         logging.info("Stopping Music Player")
         self.is_playing = False
         self.track_thread.join()
+        self._fade_to_stop()
         self.parts = []
 
     # Private Methods
@@ -70,3 +71,15 @@ class MusicPlayer:
 
             logging.debug("Waiting for loop to finish")
             self.session.wait_for_children_to_finish()
+
+    def _fade_to_stop(self) -> None:
+        first_part = self.parts[0]
+        final_vel = first_part.music.notes[0].velocity
+
+        while final_vel > 0:
+            for note in first_part.music.notes:
+                note.velocity = max(0, final_vel - 5)
+
+            first_part.play_part()
+            self.session.wait_for_children_to_finish()
+            final_vel -= 5
