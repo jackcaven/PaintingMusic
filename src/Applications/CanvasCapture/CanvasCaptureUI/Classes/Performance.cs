@@ -129,6 +129,18 @@ namespace CanvasCaptureUI.Classes
 
                 musicData.Instrument = Instruments[0];
 
+                List<Note> adjustedNotes = AdjustPitches(ref musicData);
+
+                if (adjustedNotes.Count != 0)
+                {
+                    musicData = new()
+                    {
+                        Instrument = musicData.Instrument,
+                        BPM = musicData.BPM,
+                        Notes = adjustedNotes
+                    };
+                }
+
                 displayBox.Image = postProcessingImage;
 
                 Log.Debug($"Music Data: {musicData}");
@@ -154,6 +166,44 @@ namespace CanvasCaptureUI.Classes
             {
                 return false;
             }
+        }
+
+        private static List<Note> AdjustPitches(ref MusicData coreMusic)
+        {
+            if (coreMusic.Instrument != "Violin")
+                return [];
+
+            List<Note> notes = [];
+            
+            foreach (Note note in coreMusic.Notes)
+            {
+                List<int> pitches = [];
+
+                for (int i = 0; i < note.Notes.Count(); i++)
+                {
+                    int pitch = note.Notes.ToArray()[i];
+
+                    if (pitch == 50)
+                        pitch += 5;
+                    else if (pitch < 50)
+                        pitch += 50 - pitch;
+
+                    if (pitch == 50)
+                            pitch += 5;
+
+                    pitches.Add(pitch);
+                }
+
+                notes.Add(new()
+                {
+                    Notes = pitches,
+                    StartTime = note.StartTime,
+                    Duration = note.Duration,
+                    Velocity = note.Velocity,
+                });
+            }
+
+            return notes;
         }
 
     }
