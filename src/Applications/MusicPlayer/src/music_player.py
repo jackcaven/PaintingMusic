@@ -78,8 +78,8 @@ class MusicPlayer:
 
         while final_vel > 0:
             for note in first_part.music.notes:
-                note.velocity = max(0, final_vel - 5)
+                note.velocity = max(0, final_vel)
 
             first_part.play_part()
             self.session.wait_for_children_to_finish()
-            final_vel -= 10
+            final_vel -= 20
