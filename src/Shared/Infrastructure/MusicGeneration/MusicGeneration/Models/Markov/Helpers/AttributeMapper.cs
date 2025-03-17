@@ -26,7 +26,7 @@ namespace MusicGeneration.Models.Markov.Helpers
         {
             double value = Math.Max(0, Math.Min(maxDistanceFromCentre, imageAttributes.GetDistanceFromCentre()));
 
-            return (int)((maxDistanceFromCentre - value) * 100) + 30;
+            return (int)((127 - 70) * (maxDistanceFromCentre - value) / maxDistanceFromCentre) + 70;
         }
 
         public static double GetNoteLength(ref ObjectAttributes imageAttributes)
