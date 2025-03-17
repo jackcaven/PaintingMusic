@@ -82,4 +82,4 @@ class MusicPlayer:
 
             first_part.play_part()
             self.session.wait_for_children_to_finish()
-            final_vel -= 5
+            final_vel -= 10
