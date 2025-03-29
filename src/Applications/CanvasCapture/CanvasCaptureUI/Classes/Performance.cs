@@ -64,6 +64,7 @@ namespace CanvasCaptureUI.Classes
             objectAttributesCache.Clear();
 
             coreMusicProducer.Clear();
+            modelFeedbackWriter?.Write("END" + Environment.NewLine);
             await playerClient.Stop();
             fileSystemWatcher?.Dispose();
             displayBox?.Image?.Dispose();
