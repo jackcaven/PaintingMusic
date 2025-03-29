@@ -1,6 +1,7 @@
 ﻿using ConsoleTools.Helpers;
 using Core.DataStructures.Art;
 using Core.DataStructures.Music;
+using Core.DataStructures.Result;
 using Core.Interfaces;
 using MusicGenerationTestApplication.Utilities;
 using System.Text.Json;
@@ -59,12 +60,12 @@ namespace MusicGenerationTestApplication.Pages
 
             ObjectAttributes objectAttributes = MockDataProvider.GetRandomObjectAttributes();
 
-            MusicData music = coreMusicProducer.Add(objectAttributes, 
+            CoreResult result = coreMusicProducer.Add(objectAttributes, 
                                                     MockDataProvider.GetRandomCanvasAttributes());
 
             attributesCache.Add(objectAttributes.Id, objectAttributes);
 
-            string json = JsonSerializer.Serialize<MusicData>(music, jsonSerializerOptions);
+            string json = JsonSerializer.Serialize<CoreResult>(result, jsonSerializerOptions);
 
             Console.WriteLine(json);
 

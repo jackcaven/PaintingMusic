@@ -4,6 +4,7 @@ using Core.DataStructures.Music;
 using Core.Interfaces;
 using MusicGeneration.Models.Markov.Helpers;
 using Core.Utilities.DataStructures;
+using Core.DataStructures.Result;
 
 namespace MusicGeneration.Models.Markov
 {
@@ -22,23 +23,28 @@ namespace MusicGeneration.Models.Markov
         private readonly MarkovModel chordModel = new(chordMarkovNamespace);
         
 
-        public MusicData Add(ObjectAttributes objectAttributes, CanvasAttributes canvasAttributes)
+        public CoreResult Add(ObjectAttributes objectAttributes, CanvasAttributes canvasAttributes)
         {
-            MusicData musicData = new() { Instrument = "", Notes = [] };
+            CoreResult result = new()
+            {
+                MusicData = new() { Instrument = string.Empty, Notes = [] }
+            };
 
             canvasAttributesCache = canvasAttributes;
 
             // Handle Fist Object
             if (objectAttributesCache.Count == 0)
             {
-                musicData.Notes.AddRange(GenerateMotif(startTime: 0, ref objectAttributes, ref canvasAttributesCache));
+                result.ModelDecisionLogic += "This is the first object, therefore I am creating a new motif.";
 
-                musicDataCache[objectAttributes.Id] = musicData;
+                result.MusicData.Notes.AddRange(GenerateMotif(startTime: 0, ref objectAttributes, ref canvasAttributesCache));
+
+                musicDataCache[objectAttributes.Id] = result.MusicData;
                 objectAttributesCache.Add(objectAttributes);
 
-                musicData.BPM = defaultBPM;
+                result.MusicData.BPM = defaultBPM;
 
-                return musicData;
+                return result;
             }
 
             // Check whether to build a chord
@@ -46,25 +52,27 @@ namespace MusicGeneration.Models.Markov
 
             if (distance <= closeObjectThreshold)
             {
-                musicData.Notes.AddRange(GenerateChords(ref objectAttributes, musicDataCache[closestObject.Id]));
-                musicDataCache[objectAttributes.Id] = musicData;
+                result.ModelDecisionLogic += "This shape seems to be quite close to another, I am going to create a chord using the closest shape.";
+                result.MusicData.Notes.AddRange(GenerateChords(ref objectAttributes, musicDataCache[closestObject.Id]));
+                musicDataCache[objectAttributes.Id] = result.MusicData;
                 objectAttributesCache.Add(objectAttributes);
 
-                musicData.BPM = AttributeMapper.GetBPM(ref canvasAttributesCache, objectAttributesCache.Count);
+                result.MusicData.BPM = AttributeMapper.GetBPM(ref canvasAttributesCache, objectAttributesCache.Count);
 
-                return musicData;
+                return result;
             }
 
             // Extend melody
+            result.ModelDecisionLogic += "This shape seems to be independent, I am going to add a new motif";
             double startTime = musicDataCache.Values.Select(x => x.GetEndTime()).Max();
             
-            musicData.Notes.AddRange(GenerateMotif(startTime, ref objectAttributes, ref canvasAttributes));
-            musicDataCache[objectAttributes.Id] = musicData;
+            result.MusicData.Notes.AddRange(GenerateMotif(startTime, ref objectAttributes, ref canvasAttributes));
+            musicDataCache[objectAttributes.Id] = result.MusicData;
             objectAttributesCache.Add(objectAttributes);
 
-            musicData.BPM = AttributeMapper.GetBPM(ref canvasAttributesCache, objectAttributesCache.Count);
+            result.MusicData.BPM = AttributeMapper.GetBPM(ref canvasAttributesCache, objectAttributesCache.Count);
 
-            return musicData;
+            return result;
         }
 
         public void Remove(ObjectAttributes imageAttributes, CanvasAttributes canvasAttributes)
