@@ -32,17 +32,21 @@ namespace MusicGeneration.Models.Markov
 
             canvasAttributesCache = canvasAttributes;
 
+            string feedback = string.Empty;
+
             // Handle Fist Object
             if (objectAttributesCache.Count == 0)
             {
-                result.ModelDecisionLogic += "This is the first object, therefore I am creating a new motif.";
+                result.ModelDecisionLogic += "This is the first object, therefore I am creating a new motif. ";
 
-                result.MusicData.Notes.AddRange(GenerateMotif(startTime: 0, ref objectAttributes, ref canvasAttributesCache));
+                result.MusicData.Notes.AddRange(GenerateMotif(startTime: 0, ref objectAttributes, ref canvasAttributesCache, out feedback));
 
                 musicDataCache[objectAttributes.Id] = result.MusicData;
                 objectAttributesCache.Add(objectAttributes);
 
                 result.MusicData.BPM = defaultBPM;
+
+                result.ModelDecisionLogic += feedback;
 
                 return result;
             }
@@ -52,8 +56,8 @@ namespace MusicGeneration.Models.Markov
 
             if (distance <= closeObjectThreshold)
             {
-                result.ModelDecisionLogic += "This shape seems to be quite close to another, I am going to create a chord using the closest shape.";
-                result.MusicData.Notes.AddRange(GenerateChords(ref objectAttributes, musicDataCache[closestObject.Id]));
+                result.ModelDecisionLogic += "This shape seems to be quite close to another, I am going to create a chord using the closest shape. ";
+                result.MusicData.Notes.AddRange(GenerateChords(ref objectAttributes, musicDataCache[closestObject.Id], out feedback));
                 musicDataCache[objectAttributes.Id] = result.MusicData;
                 objectAttributesCache.Add(objectAttributes);
 
@@ -66,11 +70,13 @@ namespace MusicGeneration.Models.Markov
             result.ModelDecisionLogic += "This shape seems to be independent, I am going to add a new motif";
             double startTime = musicDataCache.Values.Select(x => x.GetEndTime()).Max();
             
-            result.MusicData.Notes.AddRange(GenerateMotif(startTime, ref objectAttributes, ref canvasAttributes));
+            result.MusicData.Notes.AddRange(GenerateMotif(startTime, ref objectAttributes, ref canvasAttributes, out feedback));
             musicDataCache[objectAttributes.Id] = result.MusicData;
             objectAttributesCache.Add(objectAttributes);
 
             result.MusicData.BPM = AttributeMapper.GetBPM(ref canvasAttributesCache, objectAttributesCache.Count);
+
+            result.ModelDecisionLogic += feedback;
 
             return result;
         }
@@ -89,14 +95,15 @@ namespace MusicGeneration.Models.Markov
             canvasAttributesCache = null;
         }
 
-        private List<Note> GenerateMotif(double startTime, ref ObjectAttributes objectAttributes, ref CanvasAttributes canvasAttributes)
+        private List<Note> GenerateMotif(double startTime, ref ObjectAttributes objectAttributes, ref CanvasAttributes canvasAttributes, out string feedback)
         {
             List<Note> notesToReturn = [];
+            feedback = string.Empty;
 
-            int initialPitch = AttributeMapper.GetPitch(ref objectAttributes);
-            double noteLength = AttributeMapper.GetNoteLength(ref objectAttributes);
+            int initialPitch = AttributeMapper.GetPitch(ref objectAttributes, ref feedback);
+            double noteLength = AttributeMapper.GetNoteLength(ref objectAttributes, ref feedback);
             int velocity = AttributeMapper.GetVelocity(ref objectAttributes);
-            int numberOfNotes = AttributeMapper.GetNumberOfNotes(ref objectAttributes);
+            int numberOfNotes = AttributeMapper.GetNumberOfNotes(ref objectAttributes, ref feedback);
 
             List<int> notes = noteModel.GenerateNotes(initialPitch, numberOfNotes);
 
@@ -113,13 +120,14 @@ namespace MusicGeneration.Models.Markov
 
             return notesToReturn;
         }
-        private List<Note> GenerateChords(ref ObjectAttributes objectAttributes, MusicData motifToBuildChordFrom)
+        private List<Note> GenerateChords(ref ObjectAttributes objectAttributes, MusicData motifToBuildChordFrom, out string feedback)
         {
             List<Note> chordsToReturn = [];
             List<Note> notesToBuildChord = motifToBuildChordFrom.Notes;
+            feedback = string.Empty;
 
             int velocity = AttributeMapper.GetVelocity(ref objectAttributes);
-            int numberOfNotes = AttributeMapper.GetNumberOfNotes(ref objectAttributes);
+            int numberOfNotes = AttributeMapper.GetNumberOfNotes(ref objectAttributes, ref feedback);
 
             if (numberOfNotes == notesToBuildChord.Count)
             {

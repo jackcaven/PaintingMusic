@@ -1,6 +1,5 @@
 ﻿using ConsoleTools.Helpers;
 using Core.DataStructures.Art;
-using Core.DataStructures.Music;
 using Core.DataStructures.Result;
 using Core.Interfaces;
 using MusicGenerationTestApplication.Utilities;
