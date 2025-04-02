@@ -80,7 +80,7 @@ namespace SketchpadServer.Classes
                     else
                     {
                         var receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                        _logger.LogDebug("Message Received: {0}", receivedMessage);
+                        _logger.LogDebug("Message Received: {message}", receivedMessage);
 
                         UpdateShapes? payload = JsonConvert.DeserializeObject<UpdateShapes>(receivedMessage);
 
