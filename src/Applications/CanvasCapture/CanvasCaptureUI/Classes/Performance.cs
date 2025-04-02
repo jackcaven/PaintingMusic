@@ -2,19 +2,21 @@
 using CanvasCapture.Interfaces;
 using Core.DataStructures.Art;
 using Core.DataStructures.Music;
+using Core.DataStructures.Result;
 using Core.Enums.AI;
 using Core.Interfaces;
 using MusicGeneration;
 using Serilog;
 namespace CanvasCaptureUI.Classes
 {
-    internal class Performance(PictureBox displayBox) : ICanvasCaptureProcess
+    internal class Performance(PictureBox displayBox, bool logModelDecisions) : ICanvasCaptureProcess
     {
         private readonly string imageDirectory = AppSettingsManager.GetImageDirectory("Performance");
         private readonly ICoreMusicProducer coreMusicProducer = CoreMusicGeneratorFactory.ConstructMusicGenerator(Model.Markov);
         private readonly ImageCropper cropper = new(displayBox);
         private readonly MusicPlayerClient playerClient = new();
         private readonly List<ObjectAttributes> objectAttributesCache = [];
+        private readonly ModelFeedbackFileWriter? modelFeedbackWriter = logModelDecisions ? new ModelFeedbackFileWriter(AppSettingsManager.GetImageDirectory("Performance")) : null;
         
         private CanvasAttributes? canvasAttributesCache;
         private FileSystemWatcher? fileSystemWatcher;
@@ -62,6 +64,7 @@ namespace CanvasCaptureUI.Classes
             objectAttributesCache.Clear();
 
             coreMusicProducer.Clear();
+            modelFeedbackWriter?.Write("END" + Environment.NewLine);
             await playerClient.Stop();
             fileSystemWatcher?.Dispose();
             displayBox?.Image?.Dispose();
@@ -125,9 +128,11 @@ namespace CanvasCaptureUI.Classes
 
                 Log.Debug("Canvas Attributes: {CanvasData}", canvasAttributesCache);
 
-                MusicData musicData = coreMusicProducer.Add(objectAttributes, canvasAttributesCache);
+                CoreResult result = coreMusicProducer.Add(objectAttributes, canvasAttributesCache);
 
-                musicData.Instrument = Instruments[0];
+                result.MusicData.Instrument = Instruments[0];
+
+                MusicData musicData = result.MusicData;
 
                 List<Note> adjustedNotes = AdjustPitches(ref musicData);
 
@@ -144,6 +149,8 @@ namespace CanvasCaptureUI.Classes
                 displayBox.Image = postProcessingImage;
 
                 Log.Debug($"Music Data: {musicData}");
+
+                modelFeedbackWriter?.Write(result.ModelDecisionLogic);
 
                 await playerClient.SendPayload(musicData);
 

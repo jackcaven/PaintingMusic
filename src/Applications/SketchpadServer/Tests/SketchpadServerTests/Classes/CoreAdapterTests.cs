@@ -12,6 +12,13 @@ namespace SketchpadServerTests.Classes
     {
         private readonly Mock<ICoreMusicProducer> _mockCoreMusicProducer;
         private readonly CoreAdapter _coreAdapter;
+        
+        private readonly MusicData _mockMusicData = new()
+        {
+            Instrument = "Piano",
+            BPM = 120,
+            Notes = []
+        };
 
         public CoreAdapterTests()
         {
@@ -27,12 +34,7 @@ namespace SketchpadServerTests.Classes
             var objectAttributes = CoreDataMapper.MapToCoreData(ref updateShapes);
             _mockCoreMusicProducer
                 .Setup(x => x.Add(It.IsAny<ObjectAttributes>(), It.IsAny<CanvasAttributes>()))
-                .Returns(new MusicData() 
-                { 
-                    Instrument = "Piano",
-                    BPM = 120,
-                    Notes = []
-                });
+                .Returns(new Core.DataStructures.Result.CoreResult() { MusicData = _mockMusicData});
 
             // Act
             var result = _coreAdapter.GenerateMusic(updateShapes);
