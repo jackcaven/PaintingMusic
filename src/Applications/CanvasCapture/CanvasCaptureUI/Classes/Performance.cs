@@ -11,6 +11,8 @@ namespace CanvasCaptureUI.Classes
 {
     internal class Performance(PictureBox displayBox, bool logModelDecisions) : ICanvasCaptureProcess
     {
+        private const string fileWriterEndMessage = "|END|";
+
         private readonly string imageDirectory = AppSettingsManager.GetImageDirectory("Performance");
         private readonly ICoreMusicProducer coreMusicProducer = CoreMusicGeneratorFactory.ConstructMusicGenerator(Model.Markov);
         private readonly ImageCropper cropper = new(displayBox);
@@ -64,7 +66,7 @@ namespace CanvasCaptureUI.Classes
             objectAttributesCache.Clear();
 
             coreMusicProducer.Clear();
-            modelFeedbackWriter?.Write("END" + Environment.NewLine);
+            modelFeedbackWriter?.Write(fileWriterEndMessage + Environment.NewLine);
             await playerClient.Stop();
             fileSystemWatcher?.Dispose();
             displayBox?.Image?.Dispose();
