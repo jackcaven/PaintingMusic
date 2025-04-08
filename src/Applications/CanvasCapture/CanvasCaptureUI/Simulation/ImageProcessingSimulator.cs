@@ -7,6 +7,7 @@ using MusicGeneration;
 using Core.DataStructures.Music;
 using CanvasCapture.Interfaces;
 using Serilog;
+using Core.DataStructures.Result;
 
 namespace CanvasCaptureUI.Simulation
 {
@@ -110,9 +111,10 @@ namespace CanvasCaptureUI.Simulation
 
                     Log.Information($"{CanvasAttributesCache}{Environment.NewLine}{Environment.NewLine}");
 
-                    MusicData musicData = coreMusicProducer.Add(data, CanvasAttributesCache);
+                    CoreResult result = coreMusicProducer.Add(data, CanvasAttributesCache);
 
-                    Log.Information($"{musicData}{Environment.NewLine}{Environment.NewLine}");
+                    Log.Information($"{result.ModelDecisionLogic}");
+                    Log.Information($"{result.MusicData}{Environment.NewLine}{Environment.NewLine}");
 
                     ImageCache = image;
                 }

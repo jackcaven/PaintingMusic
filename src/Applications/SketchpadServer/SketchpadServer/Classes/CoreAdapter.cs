@@ -32,7 +32,7 @@ namespace SketchpadServer.Classes
                 _canvasAttributes.AreaCovered += objectAttributes.Area;
             }
 
-            return _coreMusicProducer.Add(objectAttributes, _canvasAttributes);
+            return _coreMusicProducer.Add(objectAttributes, _canvasAttributes).MusicData;
         }
 
         public void DeleteShape(string shapeID) 

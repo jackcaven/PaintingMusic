@@ -9,6 +9,7 @@ namespace CanvasCapture
     {
         private const string autoAppShutDownKey = "Shut down on performance end";
         private const string runAsSimKey = "Run as a simulation";
+        private const string logModelDecisionsKey = "View model decision feedback";
 
         private ICanvasCaptureProcess canvasCaptureProcess;
         private readonly Dictionary<string, bool> options;
@@ -16,6 +17,7 @@ namespace CanvasCapture
         {
             { autoAppShutDownKey, true },
             { runAsSimKey, false },
+            { logModelDecisionsKey, true },
         };
         private readonly List<string> instruments = [
             "Piano",
@@ -30,7 +32,7 @@ namespace CanvasCapture
             options = defaultOptions;
             ConfigureSettings();
             ConfigureLogger();
-            canvasCaptureProcess = new Performance(pictureBoxImages);
+            canvasCaptureProcess = new Performance(pictureBoxImages, IsDevOptionSelected(logModelDecisionsKey));
         }
 
         #region Button Controls
