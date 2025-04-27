@@ -37,6 +37,11 @@ Another application in this repository that is required to be used alongside Can
 - [Music Player](/src/Applications/MusicPlayer/)
   - Music Player does not depend on any of the infrastructure or core layers, as it is written in Python.
 
+An additional application, contributed by Timothy Nisi is:
+
+- [Transparency Display](/src/Applications/TransparencyDisplay/)
+  - This is also written in python
+
 These applications and their respective documentation can be found in the application directory.
 
 ## Contributing
