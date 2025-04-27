@@ -111,3 +111,13 @@ Key thing to takeaway from the above examples is:
   
 2. Name of the model.  This is essentially the model you are working e.g. Markov/Markov2/Mercury
 3. Using imperative language and keeping commit messages short and consise (use words like add, change, alter, etc)
+
+## Contributors
+
+Painting Music appreciates the contributions from the following developers:
+
+- Jack Caven
+- Dr. Andrew Starkey
+- Sam Healy
+- Redha Nacef
+- Timothy Nisi

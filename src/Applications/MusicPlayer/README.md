@@ -72,10 +72,10 @@ python -m pipreqs.pipreqs path/to/application
 
 ## Publishing
 
-When you are ready to release a new version of Music Player, a script has been written [publish.py](./scripts/publish.py) to help with this process. All you need to do is navigate to that folder in a terminal and run the following command:
+When you are ready to release a new version of Music Player, a script has been written [publish.py](/scripts/publish.py) to help with this process. All you need to do is navigate to that folder in a terminal and run the following command:
 
 ```bash
-python -m publish.py
+python publish.py 'MusicPlayer'
 ```
 
 This will create a new directory "publish" inside the MusicPlayer directory. Inside the publish directory will be a zip folder containing all the src code and the requirments.txt file.

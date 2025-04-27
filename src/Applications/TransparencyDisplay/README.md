@@ -85,6 +85,16 @@ And run the test script in another terminal:
 python test_display.py
 ```
 
+## Publish
+
+When you are ready to release a new version of Music Player, a script has been written [publish.py](/scripts/publish.py) to help with this process. All you need to do is navigate to that folder in a terminal and run the following command:
+
+```bash
+python publish.py 'MusicPlayer'
+```
+
+This will zip up all the required files to run the application and place in a publish folder inside the application directory.
+
 ## Note
 
 The application uses DearPyGUI for the interface and requires the Cousine-BoldItalic font file to be present in the same directory as the script. The font provides a clean, italic style for better readability.
