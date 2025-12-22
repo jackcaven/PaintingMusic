@@ -146,6 +146,14 @@ class TextDisplayApp:
         self.text_content = ""
         dpg.set_value("text_display", "")
 
+    def tidy_up(self):
+        with open(self.file_path, "r+") as file:
+            try:
+                file.seek(0)
+                file.truncate()
+            except Exception as e:
+                print(f"Error clearing file: {e}")
+
     def run(self):
         """
         Run the DearPyGUI application.
@@ -169,6 +177,7 @@ class TextDisplayApp:
             print(f"Error in main loop: {e}")
         finally:
             self.running = False
+            self.tidy_up()
             dpg.destroy_context()
 
 
