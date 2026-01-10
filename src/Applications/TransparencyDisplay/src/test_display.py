@@ -46,6 +46,7 @@ def main():
         "Nunc auctor, magna eget aliquam aliquam, nunc nisl ultricies.",
         "The window should automatically scroll to show new text.",
         "Resize the window to see it dynamically adjust.",
+        "|EXIT|",
     ]
 
     # Write each text sample with a delay

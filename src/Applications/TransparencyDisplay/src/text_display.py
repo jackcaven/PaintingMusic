@@ -8,7 +8,7 @@ The application features automatic scrolling, custom font support, and text clea
 Features:
 - Real-time file monitoring
 - Automatic text scrolling
-- Custom italic font support (Cousine-BoldItalic)
+- Custom italic font support (Cousine-BoldItalic, or Jost-400-Book)
 - Text clearing with |END| keyword
 - Clean, scrollbar-free interface
 
@@ -19,7 +19,7 @@ Usage:
 Requirements:
     - Python 3.x
     - DearPyGUI
-    - Cousine-BoldItalic.ttf font file (included in the project)
+    - Cousine-BoldItalic.ttf or Jost-400-Book.ttf font file (included in the project)
 """
 
 import os
@@ -75,7 +75,7 @@ class TextDisplayApp:
                 dpg.add_text(tag="text_display", wrap=0)
 
             # Configure font
-            font_path = "Cousine-BoldItalic.ttf"
+            font_path = "Jost-400-Book.ttf"
             if not os.path.exists(font_path):
                 raise FileNotFoundError(
                     f"Required font file '{font_path}' not found. Please ensure it's in the same directory as the script."
@@ -119,6 +119,12 @@ class TextDisplayApp:
                         if "|END|" in new_content:
                             self.clear_text()
                             new_content = new_content.replace("|END|", "")
+
+                        if "|EXIT|" in new_content:
+                            self.running = False
+                            self.tidy_up()
+                            dpg.stop_dearpygui()
+                            return
 
                         # Update text widget if there's new content
                         if new_content.strip():
@@ -209,6 +215,7 @@ def main():
         print(f"Monitoring file: {os.path.abspath(file_path)}")
         print("Text will be displayed in real-time")
         print("Use the '|END|' keyword in the file to clear the display")
+        print("Use the '|EXIT|' keyword in the file to close the application")
 
         app.run()
     except FileNotFoundError as e:
