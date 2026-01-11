@@ -12,6 +12,7 @@ namespace CanvasCaptureUI.Classes
     internal class Performance(PictureBox displayBox, bool logModelDecisions) : ICanvasCaptureProcess
     {
         private const string fileWriterEndMessage = "|END|";
+        private const string fileWriterExitMessage = "|EXIT|";
 
         private readonly string imageDirectory = AppSettingsManager.GetImageDirectory("Performance");
         private readonly ICoreMusicProducer coreMusicProducer = CoreMusicGeneratorFactory.ConstructMusicGenerator(Model.Markov);
@@ -66,7 +67,7 @@ namespace CanvasCaptureUI.Classes
             objectAttributesCache.Clear();
 
             coreMusicProducer.Clear();
-            modelFeedbackWriter?.Write(fileWriterEndMessage + Environment.NewLine);
+            modelFeedbackWriter?.Write(fileWriterExitMessage + Environment.NewLine);
             await playerClient.Stop();
             fileSystemWatcher?.Dispose();
             displayBox?.Image?.Dispose();
