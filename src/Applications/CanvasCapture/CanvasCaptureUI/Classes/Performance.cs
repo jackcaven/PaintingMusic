@@ -11,7 +11,6 @@ namespace CanvasCaptureUI.Classes
 {
     internal class Performance(PictureBox displayBox, bool logModelDecisions) : ICanvasCaptureProcess
     {
-        private const string fileWriterEndMessage = "|END|";
         private const string fileWriterExitMessage = "|EXIT|";
 
         private readonly string imageDirectory = AppSettingsManager.GetImageDirectory("Performance");
