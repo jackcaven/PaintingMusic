@@ -277,6 +277,7 @@
             Margin = new Padding(2);
             Name = "PromptDesigner";
             Text = "PromptRepository";
+            Activated += PromptDesigner_Activated;
             splitContainerPromptRepo.Panel1.ResumeLayout(false);
             splitContainerPromptRepo.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainerPromptRepo).EndInit();

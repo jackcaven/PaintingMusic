@@ -26,7 +26,6 @@ namespace CanvasCaptureVLM.Pages
             SettingsService = settingsService;
             SettingsService.Settings.PropertyChanged += Settings_PropertyChanged;
             PerformanceService = new(promptRepository, settingsService, pictureBoxCanvas);
-            PageSetup();
 
         }
 
@@ -37,12 +36,7 @@ namespace CanvasCaptureVLM.Pages
             VlmComponentHelper.OnVlmDataReceived += OnVlmDataUpdate;
             buttonStop.Enabled = false;
 
-            List<string> prompts = [.. promptRepository.GetPromptNames()];
-
-            foreach (string prompt in prompts)
-            {
-                comboBoxRuleSelect.Items.Add(prompt);
-            }
+            LoadPrompts();
         }
 
         #region Logging
@@ -153,6 +147,13 @@ namespace CanvasCaptureVLM.Pages
             richTextBoxAIThoughts.AppendText(Environment.NewLine);
             richTextBoxAIThoughts.ScrollToCaret();
         }
+        #endregion
+
+        #region Form Events
+        private void Performance_Activated(object sender, EventArgs e)
+        {
+            LoadPrompts();
+        }
 
         private async void buttonStrudelLogin_Click(object sender, EventArgs e)
         {
@@ -177,6 +178,18 @@ namespace CanvasCaptureVLM.Pages
             Log.Info("Attempting to launch strudel");
             StrudelLauncher.Launch();
         }
+
+        private void LoadPrompts()
+        {
+            comboBoxRuleSelect.Items.Clear();
+
+            List<string> prompts = [.. promptRepository.GetPromptNames()];
+
+            foreach (string prompt in prompts)
+            {
+                comboBoxRuleSelect.Items.Add(prompt);
+            }
+        }
+        #endregion
     }
-    #endregion
 }

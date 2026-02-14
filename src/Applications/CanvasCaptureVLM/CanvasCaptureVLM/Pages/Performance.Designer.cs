@@ -232,6 +232,7 @@
             FormBorderStyle = FormBorderStyle.None;
             Name = "Performance";
             Text = "Performance";
+            Activated += Performance_Activated;
             panelControls.ResumeLayout(false);
             panelVlmControls.ResumeLayout(false);
             panelVlmControls.PerformLayout();

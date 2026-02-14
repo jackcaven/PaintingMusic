@@ -11,7 +11,6 @@ namespace CanvasCaptureVLM.Pages
         {
             this.promptRepository = promptRepository;
             InitializeComponent();
-            SetUp();
         }
 
         private void SetUp()
@@ -32,6 +31,13 @@ namespace CanvasCaptureVLM.Pages
             {
                 listBoxPrompts.Items.Add(promptName);
             }
+
+            listBoxPrompts.SelectedItem = "Default";
+        }
+
+        private void PromptDesigner_Activated(object sender, EventArgs e)
+        {
+            SetUp();
         }
 
         private async void listBoxPrompts_SelectedIndexChanged(object sender, EventArgs e)
