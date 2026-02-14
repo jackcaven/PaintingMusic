@@ -1,15 +1,13 @@
-using CanvasCaptureVLM.Classes.Helper;
 using CanvasCaptureVLM.Classes.Logging;
 using CanvasCaptureVLM.Classes.Prompts;
 using CanvasCaptureVLM.Classes.Settings;
-using CanvasCaptureVLM.Classes.VlmClients.Models;
 using CanvasCaptureVLM.Pages;
 
 namespace CanvasCaptureVLM
 {
     public partial class FormMain : Form
     {
-        private const int SideBarClosedWidth = 70;
+        private const int SideBarClosedWidth = 50;
 
         private int SideBarOpenWidth { get => buttonPerformance.Width; }
         private bool SidebarExpand = true;
@@ -38,8 +36,6 @@ namespace CanvasCaptureVLM
             Pages.Add(nameof(AboutPage), AboutPage);
 
             ShowPage(nameof(PerformancePage));
-
-            VlmComponentHelper.OnVlmDataReceived += UpdateTokenUsage;
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -108,18 +104,6 @@ namespace CanvasCaptureVLM
         private void buttonDevSettings_Click(object sender, EventArgs e)
         {
             ShowPage(nameof(DevSettingsPage));
-        }
-
-        private void UpdateTokenUsage(VlmResult result)
-        {
-            int tokenCount = int.Parse(labelTokenUsage.Text);
-
-            tokenCount += result.Usage.TotalTokens;
-
-            labelTokenUsage.Invoke(() =>
-            {
-                labelTokenUsage.Text = tokenCount.ToString();
-            });
         }
 
         private void buttonPromptDesigner_Click(object sender, EventArgs e)
