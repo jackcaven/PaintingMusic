@@ -1,8 +1,5 @@
 ﻿using CanvasCaptureVLM.Classes.VlmClients.Models;
 using OpenAI.Chat;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.Json;
 
 namespace CanvasCaptureVLM.Classes.VlmClients.OpenAI
@@ -20,19 +17,19 @@ namespace CanvasCaptureVLM.Classes.VlmClients.OpenAI
         {
             SystemChatMessage systemMessage = new(primer);
 
-            List<ChatMessageContentPart> userContentParts = new()
-            {
+            List<ChatMessageContentPart> userContentParts =
+            [
                 ChatMessageContentPart.CreateTextPart($" Previous music instruction:\n{string.Join("\n", previousInstructions)}"),
                 ChatMessageContentPart.CreateImagePart(isolatedImage, "image/jpeg"),
                 ChatMessageContentPart.CreateImagePart(canvasImage, "image/jpeg")
-            };
+            ];
             UserChatMessage userMessage = new(userContentParts);
 
-            ChatMessage[] messages = new ChatMessage[]
-            {
+            ChatMessage[] messages =
+            [
                 systemMessage,
                 userMessage
-            };
+            ];
 
 
             ChatCompletionOptions options = new()

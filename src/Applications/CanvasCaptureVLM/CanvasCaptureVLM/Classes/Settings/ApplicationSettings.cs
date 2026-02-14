@@ -21,8 +21,6 @@ namespace CanvasCaptureVLM.Classes.Settings
         private bool _ShowLogs = true;
         private bool _SaveLogs = true;
         private bool _SendPrompt = true;
-        // Performance Settings
-        private string _MusicGenre = string.Empty;
         #endregion
 
         #region Public
@@ -67,12 +65,6 @@ namespace CanvasCaptureVLM.Classes.Settings
         {
             get => _SendPrompt;
             set { _SendPrompt = value; OnPropertyChanged(); }
-        }
-        // Performance Settings
-        internal string MusicGenre
-        {
-            get => _MusicGenre;
-            set { _MusicGenre = value; OnPropertyChanged(); }
         }
         #endregion
 

@@ -2,27 +2,31 @@
 using CanvasCaptureVLM.Classes.Logging;
 using CanvasCaptureVLM.Classes.MusicClient.Strudel;
 using CanvasCaptureVLM.Classes.Performance.ImageHandling;
+using CanvasCaptureVLM.Classes.Prompts;
 using CanvasCaptureVLM.Classes.Settings;
 using CanvasCaptureVLM.Classes.VlmClients.Models;
 using CanvasCaptureVLM.Classes.VlmClients.OpenAI;
-using CanvasCaptureVLM.PromptRepository;
+using CanvasCaptureVLM.Interfaces.Repositories;
 using System.Drawing.Imaging;
 
 namespace CanvasCaptureVLM.Classes.Performance
 {
-    internal class PerformanceService(SettingsService settingsService, PictureBox canvasBox)
+    internal class PerformanceService(IPromptRepository promptRepository, SettingsService settingsService, PictureBox canvasBox)
     {
         private readonly PictureBox canvasBox = canvasBox;
         private readonly SettingsService settingsService = settingsService;
         private readonly ImageCropper imageCropper = new(canvasBox);
-        private readonly PrimerRepository primerRepository = new();
         private readonly OpenAiClient openAiClient = new(settingsService.Settings.APIKey);
         private readonly StrudelClient strudelClient = new();
+        private readonly IPromptRepository promptRepository = promptRepository;
 
         private ImageWatcherServices? imgDirWatcher;
         private Rectangle? canvasCache;
         private Image? imageCache;
         private IEnumerable<string> VlmResponses = [];
+        private string ruleTemplate = string.Empty;
+
+        internal string RuleTemplate { get; set; } = "Default";
 
         internal async Task<bool> Login()
         {
@@ -37,7 +41,7 @@ namespace CanvasCaptureVLM.Classes.Performance
             }
         }
         
-        internal void Start()
+        internal async void Start()
         {
             Log.Info("Performance process started.");
             Log.Debug($"File watcher watching {settingsService.Settings.ImageDirectory}");
@@ -51,6 +55,8 @@ namespace CanvasCaptureVLM.Classes.Performance
             {
                 Log.Warning("User not logged into Strudel.  No music will be played");
             }
+
+            ruleTemplate = await promptRepository.GetPrompt($"{RuleTemplate}.txt");
 
             imgDirWatcher = new ImageWatcherServices(settingsService.Settings.ImageDirectory);
             imgDirWatcher.ImageReady += async (sender, fullPath) => await OnImageReceived(fullPath);
@@ -70,6 +76,8 @@ namespace CanvasCaptureVLM.Classes.Performance
 
             VlmResponses = [];
 
+            await strudelClient.Prompt("Build to finish then silence");
+
             await strudelClient.Reset();
 
             Log.Info("Performance shutdown complete");
@@ -82,7 +90,7 @@ namespace CanvasCaptureVLM.Classes.Performance
             try
             {
                 var image = new Bitmap(fullPath.ToString()!);
-                Log.Debug($"Original image siez: {image.Width} x {image.Height}");
+                Log.Debug($"Original image size: {image.Width} x {image.Height}");
 
                 ImageHelper.ReduceImageSize(ref image);
                 Log.Debug($"Reduced image size: {image.Width} x {image.Height}");
@@ -108,7 +116,7 @@ namespace CanvasCaptureVLM.Classes.Performance
                 Log.Debug("Image subtraction successful");
 
                 // Build Prompt
-                string prompt = primerRepository.LoadPrompt("primer");
+                string prompt = PrimerPromptBuilder.BuildPrompt(ruleTemplate);
 
                 // Send to VLM with images
                 BinaryData img1 = ImageHelper.ImageToBinaryData(postProcessingImage, ImageFormat.Jpeg);
@@ -118,7 +126,7 @@ namespace CanvasCaptureVLM.Classes.Performance
 
                 if (string.IsNullOrEmpty(settingsService.Settings.APIKey))
                 {
-                    Log.Warning("No API Key.  Skipping sending prompt to VLM");
+                    Log.Warning("No API Key. Skipping sending prompt to VLM");
                     return;
                 }
                 

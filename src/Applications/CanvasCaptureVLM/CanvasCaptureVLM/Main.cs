@@ -1,4 +1,6 @@
 using CanvasCaptureVLM.Classes.Helper;
+using CanvasCaptureVLM.Classes.Logging;
+using CanvasCaptureVLM.Classes.Prompts;
 using CanvasCaptureVLM.Classes.Settings;
 using CanvasCaptureVLM.Classes.VlmClients.Models;
 using CanvasCaptureVLM.Pages;
@@ -18,17 +20,21 @@ namespace CanvasCaptureVLM
         internal About AboutPage;
         internal Performance PerformancePage;
         internal DevSettings DevSettingsPage;
+        internal PromptDesigner PromptDesignerPage;
 
         public FormMain()
         {
             InitializeComponent();
+            LogManager.ConfigureFileLogging(SettingsService.Settings.SaveLogs);
 
             PerformancePage = new(SettingsService);
             DevSettingsPage = new(SettingsService);
+            PromptDesignerPage = new(PromptFileRepository.Instance);
             AboutPage = new();
 
             Pages.Add(nameof(PerformancePage), PerformancePage);
             Pages.Add(nameof(DevSettingsPage), DevSettingsPage);
+            Pages.Add(nameof(PromptDesignerPage), PromptDesignerPage);
             Pages.Add(nameof(AboutPage), AboutPage);
 
             ShowPage(nameof(PerformancePage));
@@ -114,6 +120,11 @@ namespace CanvasCaptureVLM
             {
                 labelTokenUsage.Text = tokenCount.ToString();
             });
+        }
+
+        private void buttonPromptDesigner_Click(object sender, EventArgs e)
+        {
+            ShowPage(nameof(PromptDesignerPage));
         }
     };
 }

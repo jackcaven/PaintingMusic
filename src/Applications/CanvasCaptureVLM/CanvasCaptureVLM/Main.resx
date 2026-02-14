@@ -117,6 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="buttonPromptDesigner.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
+        EQAACxEBf2RfkQAAAQxJREFUSEvt1C1LBGEUxfFlg8Fm2qZhsfkpbPoF7FYxGzQYLb4UDYIGrdptvmBb
+        RMHPYLGZFBV+cvRhGIddkE2G+cNlhnPPPac9nU7LvwBdLOIQj3jGO55wjXVM1/wz2Ci7eOLNTW6Tkaxu
+        vWDgh5jOsI0tHOMGnyVkHwf4KFp28cSbm/OSEQb1gnCEiUqsgR52SmgmYb2mLySjZKmLYfOXcwi4yjT1
+        Jskat+Ay09SbtAVtwWjagoizWMIq1rCCeUwWX1UQreziiTc3uU3G0IK38h3GC3ZxV2avaKP4zqoXPOAC
+        y5jDVHnC88gt4BSvtYD8n5RdPPHmJrfJSNZ9VfAX0MdteaL7zX3L2HwB36aZDvUGt/8AAAAASUVORK5C
+        YII=
+</value>
+  </data>
   <metadata name="timerSideBarTransition.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>

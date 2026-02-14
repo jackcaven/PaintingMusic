@@ -42,13 +42,9 @@
             checkBoxSendPrompt = new CheckBox();
             checkBoxSaveLogs = new CheckBox();
             checkBoxShowLogs = new CheckBox();
-            groupBoxPerformanceSettings = new GroupBox();
-            textBoxMusicGenre = new TextBox();
-            labelMusicGenre = new Label();
             buttonSave = new Button();
             groupBoxAppSettings.SuspendLayout();
             groupBoxDevSettings.SuspendLayout();
-            groupBoxPerformanceSettings.SuspendLayout();
             SuspendLayout();
             // 
             // groupBoxAppSettings
@@ -199,37 +195,9 @@
             checkBoxShowLogs.Text = "Show Logs";
             checkBoxShowLogs.UseVisualStyleBackColor = true;
             // 
-            // groupBoxPerformanceSettings
-            // 
-            groupBoxPerformanceSettings.Controls.Add(textBoxMusicGenre);
-            groupBoxPerformanceSettings.Controls.Add(labelMusicGenre);
-            groupBoxPerformanceSettings.ForeColor = Color.FromArgb(225, 225, 225);
-            groupBoxPerformanceSettings.Location = new Point(10, 382);
-            groupBoxPerformanceSettings.Name = "groupBoxPerformanceSettings";
-            groupBoxPerformanceSettings.Size = new Size(636, 97);
-            groupBoxPerformanceSettings.TabIndex = 2;
-            groupBoxPerformanceSettings.TabStop = false;
-            groupBoxPerformanceSettings.Text = "Performance Settings";
-            // 
-            // textBoxMusicGenre
-            // 
-            textBoxMusicGenre.Location = new Point(215, 44);
-            textBoxMusicGenre.Name = "textBoxMusicGenre";
-            textBoxMusicGenre.Size = new Size(402, 31);
-            textBoxMusicGenre.TabIndex = 1;
-            // 
-            // labelMusicGenre
-            // 
-            labelMusicGenre.AutoSize = true;
-            labelMusicGenre.Location = new Point(6, 47);
-            labelMusicGenre.Name = "labelMusicGenre";
-            labelMusicGenre.Size = new Size(186, 25);
-            labelMusicGenre.TabIndex = 0;
-            labelMusicGenre.Text = "Override Music Genre:";
-            // 
             // buttonSave
             // 
-            buttonSave.Location = new Point(479, 490);
+            buttonSave.Location = new Point(481, 401);
             buttonSave.Name = "buttonSave";
             buttonSave.Size = new Size(167, 49);
             buttonSave.TabIndex = 3;
@@ -242,9 +210,8 @@
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(30, 30, 30);
-            ClientSize = new Size(1026, 593);
+            ClientSize = new Size(1026, 478);
             Controls.Add(buttonSave);
-            Controls.Add(groupBoxPerformanceSettings);
             Controls.Add(groupBoxDevSettings);
             Controls.Add(groupBoxAppSettings);
             FormBorderStyle = FormBorderStyle.None;
@@ -255,8 +222,6 @@
             groupBoxAppSettings.PerformLayout();
             groupBoxDevSettings.ResumeLayout(false);
             groupBoxDevSettings.PerformLayout();
-            groupBoxPerformanceSettings.ResumeLayout(false);
-            groupBoxPerformanceSettings.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -264,14 +229,11 @@
 
         private GroupBox groupBoxAppSettings;
         private GroupBox groupBoxDevSettings;
-        private GroupBox groupBoxPerformanceSettings;
         private Label labelVersionLabel;
         private Label labelVersion;
         private CheckBox checkBoxSendPrompt;
         private CheckBox checkBoxSaveLogs;
         private CheckBox checkBoxShowLogs;
-        private TextBox textBoxMusicGenre;
-        private Label labelMusicGenre;
         private Button buttonSave;
         private Label labelImgDirectoryLabel;
         private Label labelImageDirectory;

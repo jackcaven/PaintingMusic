@@ -38,7 +38,6 @@ namespace CanvasCaptureVLM.Pages
             SettingsService.Settings.ShowLogs = checkBoxShowLogs.Checked;
             SettingsService.Settings.SaveLogs = checkBoxSaveLogs.Checked;
             SettingsService.Settings.SendPrompt = checkBoxSendPrompt.Checked;
-            SettingsService.Settings.MusicGenre = textBoxMusicGenre.Text;
             
             if (SettingsService.Settings.APIKey != textBoxApiKey.Text)
             {

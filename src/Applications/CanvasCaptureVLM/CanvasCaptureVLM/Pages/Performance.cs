@@ -1,11 +1,12 @@
 ﻿using CanvasCaptureVLM.Classes.Helper;
 using CanvasCaptureVLM.Classes.Logging;
 using CanvasCaptureVLM.Classes.Performance;
+using CanvasCaptureVLM.Classes.Prompts;
 using CanvasCaptureVLM.Classes.Settings;
 using CanvasCaptureVLM.Classes.VlmClients.Models;
+using CanvasCaptureVLM.Interfaces.Repositories;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace CanvasCaptureVLM.Pages
 {
@@ -15,6 +16,7 @@ namespace CanvasCaptureVLM.Pages
 
         private readonly SettingsService SettingsService;
         private readonly PerformanceService PerformanceService;
+        private readonly IPromptRepository promptRepository = PromptFileRepository.Instance;
 
         private readonly Stopwatch SceneStopWatch = new();
 
@@ -23,7 +25,7 @@ namespace CanvasCaptureVLM.Pages
             InitializeComponent();
             SettingsService = settingsService;
             SettingsService.Settings.PropertyChanged += Settings_PropertyChanged;
-            PerformanceService = new(settingsService, pictureBoxCanvas);
+            PerformanceService = new(promptRepository, settingsService, pictureBoxCanvas);
             PageSetup();
 
         }
@@ -34,6 +36,13 @@ namespace CanvasCaptureVLM.Pages
             LogManager.OnLogReceived += OnLogReceived;
             VlmComponentHelper.OnVlmDataReceived += OnVlmDataUpdate;
             buttonStop.Enabled = false;
+
+            List<string> prompts = [.. promptRepository.GetPromptNames()];
+
+            foreach (string prompt in prompts)
+            {
+                comboBoxRuleSelect.Items.Add(prompt);
+            }
         }
 
         #region Logging
@@ -86,6 +95,7 @@ namespace CanvasCaptureVLM.Pages
             PerformanceService.Start();
             buttonStart.Enabled = false;
             buttonStop.Enabled = true;
+            comboBoxRuleSelect.Enabled = false;
             SceneStopWatch.Start();
         }
 
@@ -94,6 +104,7 @@ namespace CanvasCaptureVLM.Pages
             PerformanceService.Stop();
             buttonStart.Enabled = true;
             buttonStop.Enabled = false;
+            comboBoxRuleSelect.Enabled = true;
             SceneStopWatch.Stop();
             Log.Debug($"Performance Duration: {SceneStopWatch.Elapsed}");
             SceneStopWatch.Reset();
@@ -159,6 +170,12 @@ namespace CanvasCaptureVLM.Pages
                 buttonStrudelLogin.Image = Properties.Resources.icons8_retry_50;
                 buttonStrudelLogin.Enabled = true;
             }
+        }
+
+        private void buttonLaunchStrudel_Click(object sender, EventArgs e)
+        {
+            Log.Info("Attempting to launch strudel");
+            StrudelLauncher.Launch();
         }
     }
     #endregion

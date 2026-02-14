@@ -1,0 +1,4 @@
+﻿- Base all decisions strictly on visible visual features and prior instructions.
+- Do NOT repeat or restate previous musical instructions.
+- Be concise and concrete.
+- Do NOT speculate beyond what is visually observable.
